@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "lib": ["ES2023"]
+  },
+  "include": ["src/main/**/*", "src/preload/**/*", "electron.vite.config.ts", "vite.runtime.config.ts"]
+}

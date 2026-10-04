@@ -1,0 +1,148 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Segoe UI', 'Microsoft YaHei', 'PingFang SC', system-ui, sans-serif;
+}
+
+:root {
+  --bg: #f6f7fb;
+  --surface: #ffffff;
+  --surface-2: #f1f2f7;
+  --border: #e3e5ee;
+  --text: #1a1d29;
+  --text-dim: #6b7183;
+  --accent: #6366f1;
+  --accent-soft: rgba(99, 102, 241, 0.1);
+}
+
+.dark {
+  --bg: #0b0d12;
+  --surface: #12151d;
+  --surface-2: #191d27;
+  --border: #262b38;
+  --text: #e8eaf0;
+  --text-dim: #9aa1b2;
+  --accent: #8b93ff;
+  --accent-soft: rgba(139, 147, 255, 0.12);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* React Flow 深浅色适配 */
+.react-flow__attribution {
+  background: transparent !important;
+  color: var(--text-dim);
+  opacity: 0.55;
+  font-size: 9px;
+}
+.react-flow__controls {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+}
+.react-flow__controls-button {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  fill: var(--text-dim);
+}
+.react-flow__controls-button:hover {
+  background: var(--surface-2);
+}
+.react-flow__minimap {
+  border-radius: 10px;
+  overflow: hidden;
+}
+.react-flow__handle {
+  width: 9px;
+  height: 9px;
+  border: 2px solid var(--surface);
+  transition: transform 0.12s ease;
+}
+.react-flow__handle:hover {
+  transform: scale(1.4);
+}
+.react-flow__edge-path {
+  stroke: var(--text-dim);
+  stroke-width: 1.6;
+}
+.react-flow__edge.selected .react-flow__edge-path,
+.react-flow__edge:hover .react-flow__edge-path {
+  stroke: var(--accent);
+}
+.react-flow__connection-path {
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-dasharray: 6 4;
+}
+
+/* 场景总览使用无重滤镜的卡片，拖动时由 React Flow 更新 transform。 */
+.scene-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  padding: 16px;
+  color: var(--text);
+  font-size: 13px;
+  text-align: left;
+  cursor: grab;
+}
+.scene-card:active { cursor: grabbing; }
+.scene-card-scene { min-height: 96px; }
+.scene-card-choice, .scene-card-end { padding: 12px 14px; }
+.scene-card-active { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+.scene-card-icon { display: inline-flex; color: var(--accent); }
+.scene-card-choice .scene-card-icon { color: #d99a36; }
+.scene-card-end .scene-card-icon { color: #ec6c88; }
+.scene-card .react-flow__handle { width: 7px; height: 7px; background: var(--text-dim); opacity: .6; }
+.scene-graph-toolbar {
+  display: flex; align-items: center; gap: 10px; padding: 6px 10px;
+  border: 1px solid var(--border); border-radius: 10px;
+  background: var(--surface); font-size: 12px;
+}
+.scene-edge-label {
+  position: absolute; max-width: 200px; overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap; border: 1px solid var(--border); border-radius: 6px;
+  background: var(--surface); padding: 4px 8px; font-size: 11px; color: var(--text);
+}
+
+/* 细滚动条 */
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 8px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--text-dim);
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

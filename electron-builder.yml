@@ -1,0 +1,28 @@
+appId: dev.storyloom.editor
+productName: StoryLoom
+copyright: MIT © 2026
+
+directories:
+  buildResources: build
+  output: dist
+
+files:
+  - out/**
+
+# 运行时 JS/CSS 已通过 ?raw 内嵌进渲染层包（lib/exportHtml.ts），不再需要 extraResources
+
+win:
+  icon: build/icon.png
+  target:
+    - target: nsis
+    - target: portable
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  artifactName: ${productName}-Setup-${version}.${ext}
+  shortcutName: StoryLoom
+
+portable:
+  artifactName: ${productName}-Portable-${version}.${ext}

@@ -1,0 +1,10 @@
+/* 独立运行时页面的外壳样式（仅随 runtime 构建产物输出，不影响编辑器） */
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+}
+body {
+  background: #0b0d12;
+}

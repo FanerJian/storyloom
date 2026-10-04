@@ -1,0 +1,12 @@
+{
+  "id": "ink-paper-theme",
+  "name": "墨韵纸面主题",
+  "version": "1.0.0",
+  "author": "StoryLoom",
+  "description": "作品：暖纸色视觉小说皮肤；编辑器：强调色改为青墨。双端演示插件。",
+  "apiVersion": 1,
+  "editorCss": "/* 编辑器强调色 → 青墨 */\n:root {\n  --accent-soft: rgba(34, 211, 238, 0.12);\n}\n",
+  "editorJs": "",
+  "runtimeCss": "/* 作品：暖纸色主题（试玩与导出 HTML 生效） */\n.tgr-root {\n  --tgr-bg: #f5efe2;\n  --tgr-card: rgba(255, 252, 244, 0.92);\n  --tgr-border: rgba(120, 90, 50, 0.28);\n  --tgr-text: #3a3226;\n  --tgr-dim: #8a7d66;\n  --tgr-accent: #a8642a;\n  --tgr-accent-2: #7c5cd6;\n  background:\n    radial-gradient(1100px 480px at 18% -10%, rgba(168, 100, 42, 0.10), transparent 60%),\n    radial-gradient(900px 420px at 92% 110%, rgba(124, 92, 214, 0.08), transparent 55%),\n    var(--tgr-bg);\n}\n.tgr-vn .tgr-card {\n  background: rgba(255, 252, 244, 0.94);\n  box-shadow: 0 12px 32px rgba(90, 60, 20, 0.22);\n}\n.tgr-sprite img {\n  filter: drop-shadow(0 10px 20px rgba(90, 60, 20, 0.35)) sepia(0.12);\n}\n",
+  "runtimeJs": ""
+}

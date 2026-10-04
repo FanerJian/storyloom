@@ -1,0 +1,13 @@
+node_modules/
+out/
+dist/
+resources/runtime/
+*.log
+.DS_Store
+work/
+scripts/.*-test.mjs
+dist-web/
+src-tauri/target/
+e2e-shots/
+outputs/
+.mimosa/

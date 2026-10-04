@@ -1,0 +1,25 @@
+[package]
+name = "storyloom-lite"
+version = "0.2.0"
+description = "StoryLoom 文字游戏编辑器（Tauri 瘦身版）"
+authors = ["StoryLoom"]
+license = "MIT"
+edition = "2021"
+
+# 瘦身要点：release 关闭默认特性、开 LTO 与 strip，安装包 ~10MB 级
+[profile.release]
+panic = "abort"
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-dialog = "2"
+tauri-plugin-fs = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

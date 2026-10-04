@@ -1,0 +1,744 @@
+/* StoryLoom 可玩运行时样式（编辑器试玩与导出 HTML 共用，tgr- 前缀避免冲突） */
+
+.tgr-root {
+  --tgr-bg: #0b0d12;
+  --tgr-card: rgba(255, 255, 255, 0.04);
+  --tgr-border: rgba(255, 255, 255, 0.09);
+  --tgr-text: #e8eaf0;
+  --tgr-dim: #9aa1b2;
+  --tgr-accent: #8b93ff;
+  --tgr-accent-2: #c084fc;
+
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Segoe UI', 'Microsoft YaHei', 'PingFang SC', system-ui, sans-serif;
+  color: var(--tgr-text);
+  background:
+    radial-gradient(1200px 500px at 20% -10%, rgba(139, 147, 255, 0.08), transparent 60%),
+    radial-gradient(900px 420px at 90% 110%, rgba(192, 132, 252, 0.07), transparent 55%),
+    var(--tgr-bg);
+}
+
+.tgr-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--tgr-border);
+  flex: 0 0 auto;
+}
+
+.tgr-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tgr-tool {
+  border: 1px solid var(--tgr-border);
+  border-radius: 8px;
+  background: rgba(15, 18, 28, 0.8);
+  color: var(--tgr-text);
+  padding: 6px 9px;
+  font: inherit;
+  font-size: 12px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.tgr-tool:hover, .tgr-tool[aria-pressed='true'] {
+  border-color: var(--tgr-accent);
+  background: rgba(139, 147, 255, 0.18);
+}
+.tgr-tool:disabled { opacity: 0.4; cursor: default; }
+.tgr-tool:focus-visible, .tgr-choice:focus-visible, .tgr-speed:focus-visible {
+  outline: 2px solid var(--tgr-accent);
+  outline-offset: 3px;
+}
+.tgr-overlay[hidden] { display: none; }
+.tgr-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  padding: 16px;
+  background: rgba(4, 6, 12, 0.78);
+  backdrop-filter: blur(8px);
+}
+.tgr-panel {
+  margin: auto;
+  width: 100%;
+  max-width: 670px;
+  max-height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border: 1px solid var(--tgr-border);
+  border-radius: 16px;
+  background: #111622;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+  overflow: auto;
+}
+.tgr-panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-shrink: 0; }
+.tgr-panel-heading h2 { margin: 0; font-size: 18px; }
+.tgr-panel-note { font-size: 12px; color: var(--tgr-dim); line-height: 1.7; flex-shrink: 0; }
+.tgr-history { overflow-y: auto; margin-top: 16px; min-height: 0; }
+.tgr-history-entry { padding: 16px 0; border-bottom: 1px solid var(--tgr-border); white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.8; }
+.tgr-history-choice { color: var(--tgr-accent); font-size: 14px; }
+.tgr-slots { display: grid; gap: 10px; }
+.tgr-slot { display: flex; justify-content: space-between; align-items: center; gap: 12px; border: 1px solid var(--tgr-border); border-radius: 10px; padding: 12px; }
+.tgr-slot-thumb {
+  flex: 0 0 auto;
+  display: block;
+  width: 128px;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--tgr-border);
+  border-radius: 8px;
+  object-fit: cover;
+  background: #0d101a;
+}
+.tgr-thumb-empty {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01) 55%),
+    #0d101a;
+}
+.tgr-slot-info { min-width: 0; flex: 1 1 auto; }
+.tgr-slot-info strong { font-size: 13px; }
+.tgr-slot-info span { display: block; font-size: 11px; margin-top: 4px; color: var(--tgr-dim); }
+.tgr-slot-info p { font-size: 12px; margin: 6px 0 0; overflow-wrap: anywhere; }
+.tgr-slot-actions { display: flex; gap: 5px; flex-shrink: 0; }
+/* ---- 设置面板：滑条（accent-color + 自定义 track）与恢复默认 ---- */
+
+.tgr-settings-bar {
+  display: flex;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+.tgr-settings-list {
+  margin-top: 14px;
+  display: grid;
+  gap: 22px;
+}
+.tgr-setting {
+  display: grid;
+  gap: 12px;
+  font-size: 14px;
+}
+.tgr-setting-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.tgr-setting-head output {
+  color: var(--tgr-accent);
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+}
+.tgr-setting input[type='range'] {
+  width: 100%;
+  height: 20px;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  cursor: pointer;
+  accent-color: var(--tgr-accent);
+}
+.tgr-setting input[type='range']::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.16);
+}
+.tgr-setting input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  margin-top: -5px;
+  border-radius: 50%;
+  border: none;
+  background: var(--tgr-accent);
+  box-shadow: 0 0 10px rgba(139, 147, 255, 0.55);
+  transition: transform 0.15s ease;
+}
+.tgr-setting input[type='range']:hover::-webkit-slider-thumb {
+  transform: scale(1.15);
+}
+.tgr-setting input[type='range']::-moz-range-track {
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.16);
+}
+.tgr-setting input[type='range']::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: none;
+  background: var(--tgr-accent);
+  box-shadow: 0 0 10px rgba(139, 147, 255, 0.55);
+}
+.tgr-speed { width: 100%; }
+.tgr-speed-label { margin-top: 24px; display: grid; gap: 14px; font-size: 14px; }
+
+/* ---- 关于面板 ---- */
+
+.tgr-about { margin-top: 16px; }
+.tgr-about-title {
+  margin: 0;
+  font-family: 'Noto Serif SC', 'Source Han Serif SC', 'STZhongsong', 'SimSun', serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+.tgr-about-author { margin-top: 6px; font-size: 13px; color: var(--tgr-dim); }
+.tgr-about-version { margin-top: 2px; font-size: 12px; color: var(--tgr-dim); }
+.tgr-about-credits {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--tgr-border);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.9;
+  font-size: 14px;
+}
+
+/* ---- 装饰动画的可达性：减少动态时关闭过渡与呼吸灯 ---- */
+@media (prefers-reduced-motion: reduce) {
+  .tgr-title-screen,
+  .tgr-title-meta,
+  .tgr-title-menu,
+  .tgr-title-item,
+  .tgr-vn .tgr-header,
+  .tgr-fadein,
+  .tgr-continue,
+  .tgr-skip[aria-pressed='true'] {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+.tgr-root:fullscreen { height: 100%; }
+@media (max-width: 600px) {
+  .tgr-header { flex-wrap: wrap; gap: 10px; padding: 10px 12px; }
+  .tgr-title { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tgr-header-actions { gap: 5px; flex-wrap: wrap; }
+  .tgr-panel { padding: 14px; }
+  .tgr-slot { flex-wrap: wrap; }
+  .tgr-slot-thumb { width: 104px; }
+  .tgr-slot-actions { margin-left: auto; }
+  .tgr-vn .tgr-header {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 6px;
+    padding: 7px 10px;
+  }
+  .tgr-vn .tgr-content { padding-bottom: 120px; }
+}
+
+.tgr-fs {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid var(--tgr-border);
+  background: transparent;
+  color: var(--tgr-dim);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.tgr-fs:hover {
+  color: var(--tgr-text);
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ---- 快捷菜单：VN 模式为底部悬浮毛玻璃药丸，非 VN 模式保留头部工具条 ---- */
+
+.tgr-vn .tgr-header {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  z-index: 20;
+  flex: 0 0 auto;
+  gap: 8px;
+  max-width: calc(100% - 32px);
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(10, 12, 22, 0.55);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.45);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.tgr-vn .tgr-title { display: none; }
+.tgr-vn .tgr-content { padding-bottom: 104px; }
+
+/* 快进激活态：呼吸发光 */
+.tgr-skip[aria-pressed='true'] {
+  border-color: var(--tgr-accent);
+  background: rgba(139, 147, 255, 0.2);
+  color: #fff;
+  animation: tgr-breathe 1.3s ease-in-out infinite;
+}
+@keyframes tgr-breathe {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(139, 147, 255, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 14px 2px rgba(139, 147, 255, 0.45);
+  }
+}
+
+/* ---- 标题画面（视觉小说风格，z 层级低于 overlay、高于快捷栏） ---- */
+
+.tgr-title-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  overflow: hidden;
+  opacity: 1;
+  transition: opacity 0.28s ease;
+}
+.tgr-title-screen[hidden] { display: none; }
+.tgr-title-screen.tgr-leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+.tgr-title-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+}
+/* 无背景素材时的主题深色渐变底 */
+.tgr-title-bg.tgr-title-plain {
+  background:
+    radial-gradient(1100px 520px at 18% -10%, rgba(139, 147, 255, 0.16), transparent 60%),
+    radial-gradient(900px 460px at 88% 112%, rgba(192, 132, 252, 0.14), transparent 55%),
+    linear-gradient(160deg, #10131f 0%, #0b0d12 55%, #14102a 100%);
+}
+/* 自上而下轻微压暗，保证标题与菜单文字可读 */
+.tgr-title-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(5, 7, 14, 0.55) 0%,
+    rgba(5, 7, 14, 0.14) 32%,
+    rgba(5, 7, 14, 0.22) 58%,
+    rgba(5, 7, 14, 0.88) 100%
+  );
+}
+.tgr-title-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 36px;
+  padding: 48px 24px;
+}
+.tgr-title-meta {
+  text-align: center;
+  animation: tgr-fadeup 0.5s ease both;
+}
+.tgr-title-name {
+  margin: 0;
+  font-family: 'Noto Serif SC', 'Source Han Serif SC', 'STZhongsong', 'SimSun', serif;
+  font-size: clamp(34px, 6vw, 58px);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-indent: 0.18em;
+  color: #f2f4ff;
+  text-shadow:
+    0 4px 26px rgba(0, 0, 0, 0.65),
+    0 0 46px rgba(139, 147, 255, 0.32);
+}
+.tgr-title-author {
+  margin-top: 16px;
+  font-size: 14px;
+  letter-spacing: 0.32em;
+  text-indent: 0.32em;
+  color: rgba(232, 234, 240, 0.74);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+}
+.tgr-title-version {
+  font-size: 12px;
+  letter-spacing: 0.24em;
+  color: var(--tgr-dim);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+.tgr-title-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 232px;
+  animation: tgr-fadeup 0.5s ease 0.08s both;
+}
+.tgr-title-item {
+  padding: 12px 36px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 12px;
+  background: rgba(10, 13, 24, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--tgr-text);
+  font: inherit;
+  font-size: 15px;
+  letter-spacing: 0.34em;
+  text-indent: 0.34em;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.tgr-title-item:hover:not(:disabled),
+.tgr-title-item:focus-visible {
+  border-color: rgba(139, 147, 255, 0.85);
+  background: rgba(139, 147, 255, 0.16);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 0 24px rgba(139, 147, 255, 0.35);
+  outline: none;
+}
+.tgr-title-item:disabled {
+  opacity: 0.38;
+  cursor: default;
+}
+
+/* 全屏时舞台铺满并给内容留出原布局 */
+.tgr-stage:fullscreen {
+  background: var(--tgr-bg);
+}
+
+.tgr-title {
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  color: var(--tgr-dim);
+  font-weight: 600;
+}
+
+.tgr-restart {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid var(--tgr-border);
+  background: transparent;
+  color: var(--tgr-dim);
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.tgr-restart:hover {
+  color: var(--tgr-text);
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ---- 舞台：媒体层（背景/立绘） + 内容层（文字/选项） ---- */
+
+.tgr-stage {
+  flex: 1 1 auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  outline: none;
+}
+
+.tgr-media {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.tgr-bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.tgr-bg.tgr-on {
+  opacity: 1;
+}
+.tgr-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tgr-sprite {
+  position: absolute;
+  bottom: 0;
+  height: 82%;
+  width: 34%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  transition:
+    opacity 0.35s ease,
+    left 0.55s ease,
+    transform 0.55s ease;
+}
+.tgr-sprite.tgr-on {
+  opacity: 1;
+}
+.tgr-sprite img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.45));
+}
+.tgr-sprite-left {
+  left: 1%;
+}
+.tgr-sprite-center {
+  left: 50%;
+  transform: translateX(-50%);
+  width: 44%;
+}
+.tgr-sprite-right {
+  right: 1%;
+}
+
+.tgr-content {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 20px 40px;
+  outline: none;
+}
+
+/* 视觉小说模式：卡片贴底，半透明底色让背景透出来 */
+.tgr-vn .tgr-content {
+  padding: 24px 20px 18px;
+}
+.tgr-vn .tgr-card {
+  margin-top: auto;
+  margin-bottom: 0;
+  background: rgba(8, 10, 16, 0.82);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+.tgr-vn .tgr-card.tgr-end,
+.tgr-vn .tgr-card.tgr-error {
+  margin: auto;
+}
+
+.tgr-card {
+  margin: auto;
+  width: 100%;
+  max-width: 620px;
+  background: var(--tgr-card);
+  border: 1px solid var(--tgr-border);
+  border-radius: 16px;
+  padding: 28px 30px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+}
+
+.tgr-fadein {
+  animation: tgr-fadeup 0.28s ease both;
+}
+@keyframes tgr-fadeup {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.tgr-speaker {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--tgr-accent);
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid rgba(139, 147, 255, 0.35);
+}
+
+.tgr-text {
+  font-size: 17px;
+  line-height: 1.85;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.tgr-dim {
+  color: var(--tgr-dim);
+}
+
+.tgr-continue {
+  margin-top: 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: transparent;
+  color: var(--tgr-dim);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 6px 4px;
+  animation: tgr-pulse 1.6s ease-in-out infinite;
+}
+.tgr-continue:hover {
+  color: var(--tgr-accent);
+}
+@keyframes tgr-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.tgr-choose-hint {
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  color: var(--tgr-dim);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.tgr-choice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tgr-choice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  padding: 13px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--tgr-border);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--tgr-text);
+  font-size: 15px;
+  line-height: 1.5;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    transform 0.15s ease;
+}
+.tgr-choice:hover {
+  border-color: rgba(139, 147, 255, 0.55);
+  background: rgba(139, 147, 255, 0.1);
+  transform: translateX(3px);
+}
+.tgr-key {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--tgr-accent);
+  background: rgba(139, 147, 255, 0.12);
+  border: 1px solid rgba(139, 147, 255, 0.3);
+}
+
+.tgr-end {
+  text-align: center;
+  padding: 44px 30px;
+}
+.tgr-end-mark {
+  font-size: 15px;
+  letter-spacing: 0.35em;
+  color: var(--tgr-dim);
+  margin-bottom: 10px;
+}
+.tgr-end-label {
+  font-size: 24px;
+  font-weight: 700;
+  background: linear-gradient(120deg, var(--tgr-accent), var(--tgr-accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 26px;
+}
+
+.tgr-restart-big {
+  padding: 10px 22px;
+  border-radius: 10px;
+  border: 1px solid rgba(139, 147, 255, 0.45);
+  background: rgba(139, 147, 255, 0.12);
+  color: var(--tgr-text);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.tgr-restart-big:hover {
+  background: rgba(139, 147, 255, 0.22);
+}
+
+.tgr-error {
+  border-color: rgba(248, 113, 113, 0.45);
+}
+.tgr-error-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #f87171;
+  margin-bottom: 8px;
+}
+
+/* ---- 屏幕效果层：闪光/转场遮罩（盖在内容之上，不接收点击） ---- */
+
+.tgr-fx {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  opacity: 0;
+}
+
+/* ---- 屏幕震动（api.shake，强度由 --tgr-shake-amp 控制） ---- */
+
+.tgr-shake {
+  animation: tgr-shake 0.09s linear infinite;
+}
+@keyframes tgr-shake {
+  0% {
+    transform: translate(var(--tgr-shake-amp, 8px), 0);
+  }
+  25% {
+    transform: translate(calc(var(--tgr-shake-amp, 8px) * -0.7), calc(var(--tgr-shake-amp, 8px) * 0.5));
+  }
+  50% {
+    transform: translate(calc(var(--tgr-shake-amp, 8px) * 0.5), calc(var(--tgr-shake-amp, 8px) * -0.6));
+  }
+  75% {
+    transform: translate(calc(var(--tgr-shake-amp, 8px) * -0.4), 0);
+  }
+  100% {
+    transform: translate(var(--tgr-shake-amp, 8px), 0);
+  }
+}

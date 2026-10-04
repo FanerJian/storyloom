@@ -1,0 +1,12 @@
+{
+  "id": "theater-wide",
+  "name": "剧场宽幅模式",
+  "version": "1.0.0",
+  "author": "StoryLoom",
+  "description": "作品：加宽对白卡、放大正文字号（runtimeJs 动态样式演示）。",
+  "apiVersion": 1,
+  "editorCss": "",
+  "editorJs": "",
+  "runtimeCss": "",
+  "runtimeJs": "// 剧场模式：用 api.setStyle 注入动态样式（与演出脚本同一套接口）\napi.setStyle('.tgr-vn .tgr-card', 'max-width: 820px; padding: 32px 36px')\napi.setStyle('.tgr-text', 'font-size: 18px; line-height: 1.95')\n"
+}
