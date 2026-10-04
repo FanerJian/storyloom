@@ -175,6 +175,10 @@ Electron 38 · Tauri 2 · electron-vite · React 19 · TypeScript · @xyflow/rea
 
 现有的互动小说 / 文字冒险创作工具各有侧重：Twine、Ink/Inky、Yarn Spinner 侧重脚本或节点组织，WebGAL Terre 面向视觉小说演出，另有商业托管平台提供在线制作服务。本项目的目标是在同一工作流内同时提供节点画布、连续剧本编辑、视觉小说演出层、可玩的导出产物与中文本地化体验，作为这些方案之外的另一种选择。
 
+## 开源许可
+
+本项目以 [MIT](LICENSE) 许可证发布。依赖的第三方组件（Electron、Tauri、React、React Flow、zustand、elkjs 等）版权归各自所有者，遵循其原始许可证（MIT、ISC、BSD-3-Clause、Apache-2.0、EPL-2.0）；项目内示例素材与图标均为本仓库原创生成。
+
 ## 开发者指南
 
 架构地图、数据流、存档/素材/插件系统与「怎么做」手册见 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)。
