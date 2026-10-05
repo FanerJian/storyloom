@@ -4,32 +4,26 @@
 
 ![tech](https://img.shields.io/badge/Electron-38-blue) ![tech](https://img.shields.io/badge/Tauri-2-orange) ![tech](https://img.shields.io/badge/React-19-blue) ![tech](https://img.shields.io/badge/React_Flow-12-blue) ![license](https://img.shields.io/badge/license-MIT-green)
 
-## v0.6.0：视觉小说播放器与发布配置
+## 预览
 
-- **标题画面**：导出作品默认自带视觉小说式标题屏——大标题辉光、作者/版本、菜单（开始游戏 / 继续游戏[读最新存档，无档自动禁用] / 读取存档 / 设置 / 关于）。背景可任选素材库图片，菜单文案可自定义，`showMeta` 可切纯背景模式。标题画面按钮带稳定 class（`.tgr-title-start` 等），便于自动化驱动。
-- **发布设置弹窗**：编辑器的「发布设置」可视化配置以上全部内容（标题画面 / 快捷菜单 7 个入口开关 / 玩家设置项开关与出厂默认值 / 作品版本号 / 关于文本），右侧标题画面**实时预览**；配置随 `.story.json` 保存，试玩与导出所见即所得。
-- **播放器界面**：视觉小说（VN）模式快捷栏改为底部毛玻璃悬浮条；新增**快进**（打字即完、150ms 自动推进，遇选项/结局/面板自动停止）、**BGM / 音效分离音量**（与节点音量相乘，实时生效）、**自动播放速度 10 档**、**存档缩略图**（存档瞬间画面 16:9 快照存入槽位）、**回标题**、对白节点 `voiceAsset` 语音播放。
-- **设置面板**：文字速度 / 自动速度 / 双音量四滑条 + 恢复默认；按 `release.settings.*` 开关显隐；玩家设置按作品隔离持久化。
-- **编辑器便捷功能**：节点画布右键「从此节点试玩」；概览面板新增作品统计（总字数 / 节点 / 场景 / 素材 / 预计阅读时长）；试玩弹窗可勾选「预览标题画面」；StudioWorkspace 拆分为独立视图组件。
-- **运行时模块化**：player.ts（1200 行单闭包）拆为 `screens / media / saves / scripting / typewriter` 五个模块，`mountPlayer` 对外签名不变；新增 `ReleaseConfig` 契约（`normalizeRelease` 深合并兜底，旧工程零迁移）与玩家设置协议（`PlayerSettings`、存档 `thumb` 字段）。
-- **可维护性**：main 进程拆出 `e2eHarness / windowState / recentFiles`；MIME 表与 `splitSpeaker` 收敛到 shared 单一来源；新增 `docs/ARCHITECTURE.md` 架构手册；E2E 钩子支持 `STORYLOOM_DATA_DIR` 隔离档驱动，18 张截图全链路视觉验收通过。
+![节点画布：十类节点拖拽编排剧情](docs/screenshots/editor-canvas.png)
 
-## v0.5.0：长篇制作底座（阶段 A）
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/scene-graph.png" alt="场景图"/><br/><sub>场景图：章节、分支与多结局总览</sub></td>
+    <td align="center"><img src="docs/screenshots/playtest-vn.png" alt="内置试玩"/><br/><sub>内置试玩：视觉小说演出与插件皮肤</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/playtest-choice.png" alt="分支选项"/><br/><sub>分支选项：选择决定走向与结局</sub></td>
+    <td align="center"><img src="docs/screenshots/release-settings.png" alt="发布设置"/><br/><sub>发布设置：标题画面实时预览</sub></td>
+  </tr>
+</table>
 
-- **剧本视图**：按章节/场景连续编辑，全文搜索、正文替换预览、批量角色与场景分配、书签及审稿备注。剧本与原节点画布共用数据和撤销记录；插入/删除普通对白自动接回原连线。
-- **场景图**：折叠连续对白与演出，显示场景、关键选项和结局。双击可定位剧本，出口连接可显式替换原去向；原节点画布仍可编辑场景内部细节。
-- **角色库**：稳定角色 ID、显示名与姓名颜色、默认立绘和表情资料。改名同步已绑定对白；任意脚本内写死的姓名仍须人工校订。专用配音和结构化并行演出属于后续阶段 B。
-- **Windows Electron 团队工程**：选择「保存为团队工程」并指定新文件夹，生成 `project.loomproject`、`scenes/*.json`、`characters.json` 与 `assets/`。素材只保存路径、摘要和文件大小；打开工程不读取素材内容，播放器使用受限本地协议按需读取。
-- **增量与协作安全**：只原子写入改变的场景/清单文件；本地未改动的外部场景合并读取，同一文件双方修改则整体拒绝保存。保存日志可补齐中断提交，遇到第三方新改动停止恢复。编辑器每 3 秒检测外部文件变化。
-- **冲突备份**：「备份并重新加载」先保存独立恢复快照，再确认载入他人版本。若保存返回期间继续编辑且收到外部合并，暂停后续自动保存以避免回写旧副本；可以重新加载或另存到新文件夹。
-- **稳定作品标识**：v4 存储命名空间使用 `gameId`，正文校订/改名/同 ID 素材替换不会单凭内容指纹使旧档失效。删除存档所在节点、缺失素材、变量类型错误仍拒绝载入；流程不兼容时由作者提高独立的存档兼容版本。玩家存档当前仍为 v1/6 槽；v2、多页槽位、自动档、完整迁移在阶段 B 实施。
-- **迁移**：读取 v1–v3 并保留全部原有剧情/选项/变量/素材 ID。识别「场景一：」等明确标题，其余整体放入一个场景。任意脚本原样保留并列入报告，执行期间不能存档。覆盖保存旧 `.story.json` 前生成 `.pre-v4.bak`；新团队工程不会覆盖旧工程。
-- **团队版本管理**：自动生成 `.gitignore` 和 Git LFS 的 `.gitattributes`（不会覆盖已有配置）。需要团队另行安装/配置 Git LFS 与远程仓库；编辑器不会自动上传文件。删除的场景/素材文件暂时保留在磁盘，避免自动删除他人文件，可在版本管理中审查整理。
-- **解压版用户数据**：程序旁已有 `portable-data/` 或设置 `STORYLOOM_DATA_DIR` 时，配置、会话缓存和恢复快照写入该目录。常规安装仍使用系统 userData。
+## 下载
 
-验收命令：`npm run test:core` 包含目录工程、无损迁移、协作冲突、事务恢复、保存并发与万条对白测试；`npm run test:studio-app` 用隐藏 Electron 验证真实界面、素材协议、四条选择路径及独立备份。设置 `STORYLOOM_STRESS_BYTES=2147483648` 可验证 2GB 稀疏静音资源索引；它不是实际配音解码压力测试。
+Windows 安装包与便携版见 [Releases](https://github.com/FanerJian/storyloom/releases/latest)：下载 `StoryLoom-Setup-*.exe`（安装版）或 `StoryLoom-Portable-*.exe`（免安装单文件）。Tauri Lite 版暂需从源码构建。
 
-**边界**：团队目录工程当前只在 Windows Electron 版提供。Tauri/Web 保留单文件编辑方式。独立游戏 EXE、完整游戏菜单、专用配音与结构化演出尚未实现，属于阶段 B/C；不能把本版称为已完成全部商业制作方案。
+各版本变更见 [CHANGELOG.md](CHANGELOG.md)。
 
 ## 基础功能
 
@@ -47,7 +41,7 @@
 - **工程文件**：v4 支持 `.story.json` 与 `.loomproject` 目录工程，兼容读取 v1/v2/v3；自动保存、最近文件、撤销/重做，未保存工程也有恢复快照。目录工程按场景增量保存并保护外部修改
 - **深浅色主题**、中文界面、内置两个示例工程（文字冒险「翡翠旅店的夜晚」/ 视觉小说「雪落车站」含演出脚本演示）
 
-## 播放器与恢复（v0.4.2 新增）
+## 播放器与恢复
 
 - **存读档**：单文件 HTML 使用浏览器 localStorage 存 6 个槽位，记录变量、稳定剧情节点、回看、背景、立绘、BGM 位置及运行时样式。试玩使用独立命名空间。只保存素材引用，不复制 base64；作品内容变更时旧档标为不兼容，避免载入已改变的剧情。
 - **安全时点**：在普通对白、选项和结局存档。脚本执行或 `api.say()` 等待期间禁用存档，因为任意 JavaScript 的调用栈无法序列化；读档不重放已执行的变量或演出节点。
@@ -56,7 +50,7 @@
 - **崩溃恢复**：Electron 写入 `userData/recovery/`，Tauri 写入 appData，浏览器调试使用 IndexedDB。编辑后约 1.5 秒防抖，并以 15 秒周期兜底；每个工程独立快照，恢复后仍带未保存标记。保留的快照直到人工保存或明确丢弃才删除。
 - **首屏与加固**：欢迎页按需加载编辑器、试玩及示例/导出模块；ELK 仍只在自动布局时加载。发布版 CSP 限制网络连接，开发模式仅额外允许本机 HMR；自定义脚本保留 `unsafe-eval` 支持。
 
-## 自定义演出接口（v0.3 新增）
+## 自定义演出接口
 
 三种粒度，全部对**试玩与导出 HTML 同效**（工具栏 `{}` 按钮内有完整接口文档）：
 
@@ -88,7 +82,7 @@ api.goto('第三章')                 // 跳到指定名称的跳转点/结局
 
 **Yarn 互通**：演出脚本导出为效果命令 `<<shake>>` / `<<flash>>` / `<<fadeout>>` / `<<fadein>>` / `<<wait 500>>`，其余代码行为 `<<js …>>`；导入时这些命令（以及其他运行时的未知命令）自动恢复为演出脚本节点。Ink 中演出导出为注释。
 
-## 插件系统（v0.4 新增）
+## 插件系统
 
 一个插件 = 一个 JSON 文件（`.loomplugin`），可同时携带**两个作用面**的代码；工具栏插头按钮 / 视图菜单（Ctrl+Alt+P）打开「插件管理」，安装后勾选即生效：
 
@@ -126,7 +120,7 @@ api.goto('第三章')                 // 跳到指定名称的跳转点/结局
 | | Electron 版 | Tauri Lite 版 |
 |---|---|---|
 | 安装包 | ~98 MB | ~10 MB 量级 |
-| 位置 | `dist/StoryLoom-Setup-0.4.2.exe` / `StoryLoom-Portable-0.4.2.exe` | `src-tauri/target/release/bundle/nsis/` |
+| 获取 | [Releases](https://github.com/FanerJian/storyloom/releases) 提供 Setup / Portable 下载 | 从源码构建（`npm run build:tauri`，需 Rust stable-msvc） |
 | 说明 | 功能完全体 | 同一渲染层 + Rust 壳，文件对话框/读写走 Tauri 插件 |
 
 两个版本共用同一套 React 渲染层与可玩运行时，编辑器功能一致。
