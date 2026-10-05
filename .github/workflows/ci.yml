@@ -18,6 +18,9 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # GitHub 托管 runner 上 Electron 的 SUID sandbox 权限不对，会直接 SIGTRAP，先修正
+      - name: Fix Electron SUID sandbox permissions
+        run: sudo chown root node_modules/electron/dist/chrome-sandbox && sudo chmod 4755 node_modules/electron/dist/chrome-sandbox
       - run: npm run typecheck
       - run: npm run test:io
       - run: npm run test:core
