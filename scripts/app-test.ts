@@ -42,10 +42,10 @@ try {
   await until(`document.body.textContent.includes('新建空白工程')`)
   console.log('app smoke: welcome loaded')
   assert(!requests.some((url) => /Workspace-|elk\.bundled-|PlaytestModal-/.test(url)), 'welcome should not request canvas, ELK or player chunks')
-  assert(!await run(`document.querySelector('meta[http-equiv="Content-Security-Policy"]').content.includes('__STORYLOOM_')`))
+  assert(!await run(`document.querySelector('meta[http-equiv="Content-Security-Policy"]').content.includes('__FABLELOOM_')`))
   assert(await run(`fetch('https://example.com').then(() => false, () => true)`), 'release CSP blocks remote fetch')
   failures.length = 0 // Deliberate CSP rejection is expected.
-  await run(`localStorage.setItem('storyloom.plugins.v1', JSON.stringify([{ id:'e2e-hook', name:'E2E', version:'1', apiVersion:1, editorJs:'window.__test = slp;', editorCss:'', runtimeJs:'', runtimeCss:'' }])); localStorage.setItem('storyloom.plugins.enabled.v1', JSON.stringify({'e2e-hook':true}));`)
+  await run(`localStorage.setItem('fableloom.plugins.v1', JSON.stringify([{ id:'e2e-hook', name:'E2E', version:'1', apiVersion:1, editorJs:'window.__test = slp;', editorCss:'', runtimeJs:'', runtimeCss:'' }])); localStorage.setItem('fableloom.plugins.enabled.v1', JSON.stringify({'e2e-hook':true}));`)
   const project = emptyProject()
   project.meta.title = '未保存恢复验证'
   project.nodes = [

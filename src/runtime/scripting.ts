@@ -69,7 +69,7 @@ export async function runBootScripts(host: ScriptApiHost): Promise<void> {
       await runScript(host, host.story.customJs)
     } catch (err) {
       if (host.isDestroyed() || lifecycle !== host.getLifecycle()) return
-      console.error('[StoryLoom] 自定义 JS 执行出错：', err)
+      console.error('[FableLoom] 自定义 JS 执行出错：', err)
     }
   }
   for (const pl of host.plugins ?? []) {
@@ -79,7 +79,7 @@ export async function runBootScripts(host: ScriptApiHost): Promise<void> {
       await runScript(host, pl.js)
     } catch (err) {
       if (host.isDestroyed() || lifecycle !== host.getLifecycle()) return
-      console.error(`[StoryLoom] 插件「${pl.id}」运行脚本出错：`, err)
+      console.error(`[FableLoom] 插件「${pl.id}」运行脚本出错：`, err)
     }
   }
 }

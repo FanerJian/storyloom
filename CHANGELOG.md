@@ -14,8 +14,9 @@
 
 ### 变更
 
+- **更名 FableLoom**：原代号 StoryLoom 与 GitHub 上多个同领域项目重名，即日起更名为 **FableLoom**（寓言织机）。应用名 / 可执行文件 / 插件 API（`window.FableLoom`）/ 环境变量（`FABLELOOM_E2E` 等）同步更名；浏览器端 localStorage 键自动迁移；`.loomplugin` 与 `.loomproject` 文件扩展名不变，老工程完全兼容。
 - **运行时模块化**：player.ts（1200 行单闭包）拆为 `screens / media / saves / scripting / typewriter` 五个模块，`mountPlayer` 对外签名不变；新增 `ReleaseConfig` 契约（`normalizeRelease` 深合并兜底，旧工程零迁移）与玩家设置协议（`PlayerSettings`、存档 `thumb` 字段）。
-- **可维护性**：main 进程拆出 `e2eHarness / windowState / recentFiles`；MIME 表与 `splitSpeaker` 收敛到 shared 单一来源；新增 `docs/ARCHITECTURE.md` 架构手册；E2E 钩子支持 `STORYLOOM_DATA_DIR` 隔离档驱动，18 张截图全链路视觉验收通过。
+- **可维护性**：main 进程拆出 `e2eHarness / windowState / recentFiles`；MIME 表与 `splitSpeaker` 收敛到 shared 单一来源；新增 `docs/ARCHITECTURE.md` 架构手册；E2E 钩子支持 `FABLELOOM_DATA_DIR` 隔离档驱动，18 张截图全链路视觉验收通过。
 
 ## 0.5.0 · 长篇制作底座（阶段 A）
 
@@ -28,7 +29,7 @@
 - **增量与协作安全**：只原子写入改变的场景/清单文件；本地未改动的外部场景合并读取，同一文件双方修改则整体拒绝保存。保存日志可补齐中断提交，遇到第三方新改动停止恢复。编辑器每 3 秒检测外部文件变化。
 - **冲突备份**：「备份并重新加载」先保存独立恢复快照，再确认载入他人版本。若保存返回期间继续编辑且收到外部合并，暂停后续自动保存以避免回写旧副本；可以重新加载或另存到新文件夹。
 - **稳定作品标识**：v4 存储命名空间使用 `gameId`，正文校订/改名/同 ID 素材替换不会单凭内容指纹使旧档失效。删除存档所在节点、缺失素材、变量类型错误仍拒绝载入；流程不兼容时由作者提高独立的存档兼容版本。玩家存档当前仍为 v1/6 槽；v2、多页槽位、自动档、完整迁移在阶段 B 实施。
-- **解压版用户数据**：程序旁已有 `portable-data/` 或设置 `STORYLOOM_DATA_DIR` 时，配置、会话缓存和恢复快照写入该目录。常规安装仍使用系统 userData。
+- **解压版用户数据**：程序旁已有 `portable-data/` 或设置 `FABLELOOM_DATA_DIR` 时，配置、会话缓存和恢复快照写入该目录。常规安装仍使用系统 userData。
 
 ### 迁移
 
@@ -40,7 +41,7 @@
 
 ### 验收命令
 
-`npm run test:core` 包含目录工程、无损迁移、协作冲突、事务恢复、保存并发与万条对白测试；`npm run test:studio-app` 用隐藏 Electron 验证真实界面、素材协议、四条选择路径及独立备份。设置 `STORYLOOM_STRESS_BYTES=2147483648` 可验证 2GB 稀疏静音资源索引；它不是实际配音解码压力测试。
+`npm run test:core` 包含目录工程、无损迁移、协作冲突、事务恢复、保存并发与万条对白测试；`npm run test:studio-app` 用隐藏 Electron 验证真实界面、素材协议、四条选择路径及独立备份。设置 `FABLELOOM_STRESS_BYTES=2147483648` 可验证 2GB 稀疏静音资源索引；它不是实际配音解码压力测试。
 
 ### 边界
 
@@ -50,7 +51,7 @@
 
 ### 插件系统（0.4.0）
 
-- 一个插件 = 一个 `.loomplugin` JSON 文件，可同时携带两个作用面：`editorCss` / `editorJs`（编辑器换肤与行为扩展，上下文 `window.StoryLoom`，apiVersion 内承诺稳定）与 `runtimeCss` / `runtimeJs`（试玩 + 导出 HTML 同效）。
+- 一个插件 = 一个 `.loomplugin` JSON 文件，可同时携带两个作用面：`editorCss` / `editorJs`（编辑器换肤与行为扩展，上下文 `window.FableLoom`，apiVersion 内承诺稳定）与 `runtimeCss` / `runtimeJs`（试玩 + 导出 HTML 同效）。
 - `apiVersion` 不匹配的插件拒绝载入并明确报错；解析器对缺省字段全部兜底；插件注入失败只报错不停机；卸载插件后工程立即回到原生形态。
 - 工具栏插头按钮 / 视图菜单（Ctrl+Alt+P）打开「插件管理」；示例见 `examples/plugins/`。
 - 窗口自由缩放，记住尺寸/位置/最大化状态，恢复时钳回现有屏幕工作区；F11 全屏。

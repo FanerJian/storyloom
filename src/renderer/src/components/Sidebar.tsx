@@ -315,7 +315,7 @@ function IssuesTab() {
     useProjectStore.setState({
       nodes: flowNodes.map((n) => ({ ...n, selected: n.id === nodeId }))
     })
-    window.dispatchEvent(new CustomEvent('storyloom:center-node', { detail: nodeId }))
+    window.dispatchEvent(new CustomEvent('fableloom:center-node', { detail: nodeId }))
   }
 
   const icons = {

@@ -184,7 +184,7 @@ export function vnSampleProject(): StoryProject {
     version: 3,
     meta: {
       title: '雪落车站',
-      author: 'StoryLoom',
+      author: 'FableLoom',
       description:
         '视觉小说示例：末班车站台上的相遇与选择。演示背景 / 立绘 / BGM / 音效节点与演出脚本节点（自定义效果 API）。'
     },

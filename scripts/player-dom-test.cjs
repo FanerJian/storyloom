@@ -11,14 +11,14 @@ const assert = require('node:assert/strict')
 
 const taskWork = path.resolve(__dirname, '../work')
 fs.mkdirSync(taskWork, { recursive: true })
-const temp = fs.mkdtempSync(path.join(taskWork, 'storyloom-player-test-'))
+const temp = fs.mkdtempSync(path.join(taskWork, 'fableloom-player-test-'))
 app.setPath('userData', path.join(temp, 'profile'))
 app.setPath('sessionData', path.join(temp, 'profile'))
 if (process.env.CI) app.commandLine.appendSwitch('no-sandbox')
 app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required')
 const root = path.resolve(__dirname, '..')
 const bundle = buildSync({ entryPoints: [path.join(root, 'src/runtime/player.ts')], bundle: true,
-  format: 'iife', globalName: 'StoryLoomPlayer', loader: { '.css': 'empty' }, write: false }).outputFiles[0].text
+  format: 'iife', globalName: 'FableLoomPlayer', loader: { '.css': 'empty' }, write: false }).outputFiles[0].text
 const image = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLbtAAAAABJRU5ErkJggg=='
 const wav = Buffer.alloc(8044)
 wav.write('RIFF'); wav.writeUInt32LE(8036, 4); wav.write('WAVEfmt ', 8); wav.writeUInt32LE(16, 16)
@@ -45,7 +45,7 @@ const story = {
 }
 for (let i = 0; i < story.nodes.length - 1; i++) story.edges.push({ id: `e${i}`, source: story.nodes[i].id, target: story.nodes[i + 1].id, sourceHandle: story.nodes[i].type === 'choice' ? 'yes' : null })
 const file = path.join(temp, 'game.html')
-fs.writeFileSync(file, `<!doctype html><meta charset="UTF-8"><style>html,body{height:100%;margin:0}#app{height:100%}</style><style>${fs.readFileSync(path.join(root, 'src/runtime/player.css'), 'utf8')}</style><div id="app"></div><script>${bundle}</script><script>window.testStory=${JSON.stringify(story)};window.handle=StoryLoomPlayer.mountPlayer(document.getElementById('app'),testStory)</script>`)
+fs.writeFileSync(file, `<!doctype html><meta charset="UTF-8"><style>html,body{height:100%;margin:0}#app{height:100%}</style><style>${fs.readFileSync(path.join(root, 'src/runtime/player.css'), 'utf8')}</style><div id="app"></div><script>${bundle}</script><script>window.testStory=${JSON.stringify(story)};window.handle=FableLoomPlayer.mountPlayer(document.getElementById('app'),testStory)</script>`)
 
 let win
 let checks = 0
@@ -121,26 +121,26 @@ app.whenReady().then(async () => {
     await click('.tgr-close')
   })
   await check('playtest storage is separate from exported game', async () => {
-    await page(() => { handle.destroy(); handle = StoryLoomPlayer.mountPlayer(document.getElementById('app'), testStory, { storageNamespace: 'playtest' }) })
+    await page(() => { handle.destroy(); handle = FableLoomPlayer.mountPlayer(document.getElementById('app'), testStory, { storageNamespace: 'playtest' }) })
     await pause(25); await click('.tgr-saves')
     assert.equal(await page(() => [...document.querySelectorAll('[data-load]')].every((btn) => btn.disabled)), true); await click('.tgr-close')
   })
   await check('damaged slots remain readable as errors and can be replaced', async () => {
-    await page(() => { handle.destroy(); handle = StoryLoomPlayer.mountPlayer(document.getElementById('app'), testStory); const key = Object.keys(localStorage).find((key) => key.includes(':game:') && key.endsWith(':slot:6')); const base = Object.keys(localStorage).find((key) => key.includes(':game:') && key.endsWith(':slot:1')); localStorage.setItem(key || base.replace(':slot:1', ':slot:6'), '{broken') })
+    await page(() => { handle.destroy(); handle = FableLoomPlayer.mountPlayer(document.getElementById('app'), testStory); const key = Object.keys(localStorage).find((key) => key.includes(':game:') && key.endsWith(':slot:6')); const base = Object.keys(localStorage).find((key) => key.includes(':game:') && key.endsWith(':slot:1')); localStorage.setItem(key || base.replace(':slot:1', ':slot:6'), '{broken') })
     await pause(25); await click('.tgr-saves'); assert.equal(await page(() => document.querySelector('[data-load="6"]').disabled), true)
     assert.equal(await page(() => document.querySelector('[data-save="6"]').disabled), false)
     await click('[data-save="6"]'); assert.equal((await stored(6)).vars.score, 1); await click('.tgr-close')
   })
   await check('global speed persists and inline speed still overrides it', async () => {
     await click('.tgr-settings'); await page(() => { const input = document.querySelector('.tgr-speed'); input.value = '0'; input.dispatchEvent(new Event('input')) }); await click('.tgr-close')
-    await page(() => { handle.destroy(); const changed = structuredClone(testStory); changed.nodes.find((n) => n.id === 'first').data.text = '{speed:45}ABCDEFGHIJ'; window.speedStory = changed; handle = StoryLoomPlayer.mountPlayer(document.getElementById('app'), changed) })
+    await page(() => { handle.destroy(); const changed = structuredClone(testStory); changed.nodes.find((n) => n.id === 'first').data.text = '{speed:45}ABCDEFGHIJ'; window.speedStory = changed; handle = FableLoomPlayer.mountPlayer(document.getElementById('app'), changed) })
     await pause(20); const partial = await text(); assert.ok(partial.length > 0 && partial.length < 10)
     await click('.tgr-settings'); assert.equal(await page(() => document.querySelector('.tgr-speed').value), '0')
     await page(() => { const input = document.querySelector('.tgr-speed'); input.dispatchEvent(new Event('input')) })
     await pause(20); assert.equal(await text(), 'ABCDEFGHIJ'); await click('.tgr-close')
   })
   await check('restart and destroy stop detached typewriter writes', async () => {
-    await page(() => { handle.destroy(); speedStory.nodes.find((n) => n.id === 'first').data.text = '{speed:45}ABCDEFGHIJKLMNOPQRSTUV'; handle = StoryLoomPlayer.mountPlayer(document.getElementById('app'), speedStory) })
+    await page(() => { handle.destroy(); speedStory.nodes.find((n) => n.id === 'first').data.text = '{speed:45}ABCDEFGHIJKLMNOPQRSTUV'; handle = FableLoomPlayer.mountPlayer(document.getElementById('app'), speedStory) })
     await pause(20)
     await page(() => { window.oldText = document.querySelector('.tgr-text'); window.oldValue = oldText.textContent; document.querySelector('.tgr-restart').click() })
     await pause(150); assert.equal(await page(() => oldText.textContent === oldValue), true)
@@ -148,15 +148,15 @@ app.whenReady().then(async () => {
     await pause(150); assert.equal(await page(() => destroyedText.textContent === destroyedValue), true)
   })
   await check('restart cancels old script API and variable effects', async () => {
-    await page(() => { const p = structuredClone(testStory); p.nodes = [p.nodes[0], { id: 'slow', type: 'script', position: { x: 0, y: 0 }, data: { code: 'await api.wait(100); vars.score += 9; api.css(".stale { color: red }");' } }, { id: 'stop', type: 'dialogue', position: { x: 0, y: 0 }, data: { text: '{speed:0}after wait' } }]; p.edges = [{ id: 'a', source: 'start', sourceHandle: null, target: 'slow' }, { id: 'b', source: 'slow', sourceHandle: null, target: 'stop' }]; window.cancelStory = p; handle = StoryLoomPlayer.mountPlayer(document.getElementById('app'), p) })
+    await page(() => { const p = structuredClone(testStory); p.nodes = [p.nodes[0], { id: 'slow', type: 'script', position: { x: 0, y: 0 }, data: { code: 'await api.wait(100); vars.score += 9; api.css(".stale { color: red }");' } }, { id: 'stop', type: 'dialogue', position: { x: 0, y: 0 }, data: { text: '{speed:0}after wait' } }]; p.edges = [{ id: 'a', source: 'start', sourceHandle: null, target: 'slow' }, { id: 'b', source: 'slow', sourceHandle: null, target: 'stop' }]; window.cancelStory = p; handle = FableLoomPlayer.mountPlayer(document.getElementById('app'), p) })
     await pause(20)
-    await page(() => { handle.destroy(); handle = StoryLoomPlayer.mountPlayer(document.getElementById('app'), testStory) })
+    await page(() => { handle.destroy(); handle = FableLoomPlayer.mountPlayer(document.getElementById('app'), testStory) })
     await pause(140); assert.equal(await text(), 'first line'); assert.equal(await page(() => document.querySelector('#tgr-user-style').textContent.includes('.stale')), false)
   })
   await check('restart clears old fade transitions and shake timers', async () => {
     await page(() => {
       handle.destroy(); const p = structuredClone(testStory); p.customJs = 'api.shake(8, 100); await api.fadeOut("#000", 10000);'
-      window.effectStory = p; handle = StoryLoomPlayer.mountPlayer(document.getElementById('app'), p)
+      window.effectStory = p; handle = FableLoomPlayer.mountPlayer(document.getElementById('app'), p)
     })
     await pause(20)
     await page(() => { effectStory.customJs = 'api.shake(8, 500);'; document.querySelector('.tgr-restart').click() })
@@ -185,7 +185,7 @@ app.whenReady().then(async () => {
         const p = structuredClone(testStory)
         p.release.titleScreen.enabled = true
         window.titleStory = p
-        handle = StoryLoomPlayer.mountPlayer(document.getElementById('app'), p)
+        handle = FableLoomPlayer.mountPlayer(document.getElementById('app'), p)
         return null
       } catch (err) { return String((err && err.stack) || err) }
     })
@@ -208,7 +208,7 @@ app.whenReady().then(async () => {
 app.on('quit', () => {
   // Only remove the temporary directory created above, after checking its absolute location.
   const target = path.resolve(temp)
-  if (path.dirname(target) === taskWork && path.basename(target).startsWith('storyloom-player-test-')) {
+  if (path.dirname(target) === taskWork && path.basename(target).startsWith('fableloom-player-test-')) {
     try { fs.rmSync(target, { recursive: true, force: true }) } catch { /* Chromium may still release files */ }
   }
 })

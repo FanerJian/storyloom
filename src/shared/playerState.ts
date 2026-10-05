@@ -59,9 +59,9 @@ function canonical(value: unknown): string {
 }
 
 export function playerIdentity(story: StoryProject, namespace = 'game', startNodeId?: string): string {
-  if (story.authoring?.gameId) return `storyloom:player:${namespace}:${story.authoring.gameId}${namespace === 'playtest' && startNodeId ? `:${startNodeId}` : ''}`
+  if (story.authoring?.gameId) return `fableloom:player:${namespace}:${story.authoring.gameId}${namespace === 'playtest' && startNodeId ? `:${startNodeId}` : ''}`
   const start = startNodeId ?? story.nodes.find((n) => n.type === 'start')?.id ?? story.nodes[0]?.id ?? ''
-  return `storyloom:player:${namespace}:${hash(canonical([story.meta.title, story.meta.author, start]))}`
+  return `fableloom:player:${namespace}:${hash(canonical([story.meta.title, story.meta.author, start]))}`
 }
 
 /** Asset bytes are hashed separately so we never duplicate all base64 data in a JSON string. */

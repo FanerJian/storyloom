@@ -234,8 +234,8 @@ export function FlowCanvas({ sceneId }: { sceneId?: string }) {
         toast.error(`自动布局失败：${String(err)}`)
       }
     }
-    window.addEventListener('storyloom:autolayout', handler)
-    return () => window.removeEventListener('storyloom:autolayout', handler)
+    window.addEventListener('fableloom:autolayout', handler)
+    return () => window.removeEventListener('fableloom:autolayout', handler)
   }, [fitWithFallback, sceneId])
 
   /** 试玩事件（工具栏/F5 触发；事件 detail.nodeId 优先，其次回退到选中节点） */
@@ -245,8 +245,8 @@ export function FlowCanvas({ sceneId }: { sceneId?: string }) {
       const selected = useProjectStore.getState().nodes.find((n) => (n as StoryNode & { selected?: boolean }).selected)
       openPlaytest(detail?.nodeId ?? selected?.id ?? null)
     }
-    window.addEventListener('storyloom:playtest', handler)
-    return () => window.removeEventListener('storyloom:playtest', handler)
+    window.addEventListener('fableloom:playtest', handler)
+    return () => window.removeEventListener('fableloom:playtest', handler)
   }, [openPlaytest])
 
   /** 节点右键菜单：从该节点试玩 / 定位到节点 */
@@ -280,8 +280,8 @@ export function FlowCanvas({ sceneId }: { sceneId?: string }) {
       const id = (e as CustomEvent<string>).detail
       if (useProjectStore.getState().nodes.some((x) => x.id === id)) centerNode(id)
     }
-    window.addEventListener('storyloom:center-node', handler)
-    return () => window.removeEventListener('storyloom:center-node', handler)
+    window.addEventListener('fableloom:center-node', handler)
+    return () => window.removeEventListener('fableloom:center-node', handler)
   }, [centerNode])
 
   return (
@@ -357,7 +357,7 @@ export function FlowCanvas({ sceneId }: { sceneId?: string }) {
             role="menuitem"
             className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-[12px] text-[var(--text)] outline-none hover:bg-[var(--surface-2)] focus:bg-[var(--surface-2)]"
             onClick={() => {
-              window.dispatchEvent(new CustomEvent('storyloom:playtest', { detail: { nodeId: ctxMenu.nodeId } }))
+              window.dispatchEvent(new CustomEvent('fableloom:playtest', { detail: { nodeId: ctxMenu.nodeId } }))
               setCtxMenu(null)
             }}
           >
@@ -368,7 +368,7 @@ export function FlowCanvas({ sceneId }: { sceneId?: string }) {
             role="menuitem"
             className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-[12px] text-[var(--text)] outline-none hover:bg-[var(--surface-2)] focus:bg-[var(--surface-2)]"
             onClick={() => {
-              window.dispatchEvent(new CustomEvent('storyloom:center-node', { detail: ctxMenu.nodeId }))
+              window.dispatchEvent(new CustomEvent('fableloom:center-node', { detail: ctxMenu.nodeId }))
               setCtxMenu(null)
             }}
           >

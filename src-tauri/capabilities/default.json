@@ -1,7 +1,7 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "StoryLoom Lite 主窗口能力：对话框、文件读写（用户自选路径）、窗口标题",
+  "description": "FableLoom Lite 主窗口能力：对话框、文件读写（用户自选路径）、窗口标题",
   "windows": ["main"],
   "permissions": [
     "core:default",

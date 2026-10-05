@@ -243,10 +243,10 @@ export function exportYarn(project: StoryProject): { text: string; warnings: str
   }
 
   const header =
-    `// 由 StoryLoom 导出的 Yarn 脚本。\n` +
+    `// 由 FableLoom 导出的 Yarn 脚本。\n` +
     `// 多媒体演出导出为自定义命令：<<bg 名称>> / <<sprite show 名称 center 角色名>> / <<audio bgm play 名称 loop 80>>。\n` +
     `// 屏幕效果导出为：<<shake>> / <<flash>> / <<fadeout>> / <<fadein>> / <<wait 500>>，任意脚本行为 <<js …>>。\n` +
-    `// 这些命令在其他 Yarn 运行时中会被忽略；重新导入 StoryLoom 时恢复为节点（素材需重新选取）。\n\n`
+    `// 这些命令在其他 Yarn 运行时中会被忽略；重新导入 FableLoom 时恢复为节点（素材需重新选取）。\n\n`
 
   return { text: header + blocks.join('\n\n') + '\n', warnings }
 }
@@ -446,7 +446,7 @@ function parseBody(lines: string[], varSeeds: Map<string, VarSeed>, warnings: st
       segments.push({ kind: 'jump', target: m[1].trim() })
       continue
     }
-    // StoryLoom 导出的结局标记：【完】结局名
+    // FableLoom 导出的结局标记：【完】结局名
     if ((m = line.match(/^【完】\s*(.*)$/))) {
       flushAll()
       segments.push({ kind: 'end', label: m[1].trim() })

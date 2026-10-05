@@ -13,14 +13,14 @@ const isDev = !!process.env['ELECTRON_RENDERER_URL']
 registerAssetScheme()
 // 解压版可把配置与恢复文件保存在程序旁，减少系统盘写入。
 const besideData = join(dirname(app.getPath('exe')), 'portable-data')
-const portableData = process.env.STORYLOOM_DATA_DIR || (existsSync(besideData) ? besideData : '')
+const portableData = process.env.FABLELOOM_DATA_DIR || (existsSync(besideData) ? besideData : '')
 if (portableData) {
   const dataDirectory = resolve(portableData); mkdirSync(dataDirectory, { recursive: true })
   app.setPath('userData', dataDirectory); app.setPath('sessionData', dataDirectory)
 }
 
 // 单实例锁：再次启动时聚焦已有窗口（E2E 钩子实例豁免，允许与正式实例并行）
-if (!process.env['STORYLOOM_E2E'] && !app.requestSingleInstanceLock()) {
+if (!process.env['FABLELOOM_E2E'] && !app.requestSingleInstanceLock()) {
   app.quit()
 }
 
@@ -51,7 +51,7 @@ function createWindow(): void {
   })
   if (bounds.maximized) mainWindow.maximize()
 
-  mainWindow.on('ready-to-show', () => { if (!process.env.STORYLOOM_TEST_HIDDEN) mainWindow?.show() })
+  mainWindow.on('ready-to-show', () => { if (!process.env.FABLELOOM_TEST_HIDDEN) mainWindow?.show() })
 
   // 尺寸/位置变化后延时写盘
   const onBoundsChange = (): void => {
@@ -126,7 +126,7 @@ function createWindow(): void {
   }
 
   // 开发用 E2E 钩子（实现见 e2eHarness.ts）
-  if (process.env['STORYLOOM_E2E']) {
+  if (process.env['FABLELOOM_E2E']) {
     mainWindow.webContents.once('did-finish-load', () => {
       void runE2E(mainWindow!)
     })

@@ -1,4 +1,4 @@
-# StoryLoom · 现代化文字游戏编辑器
+# FableLoom · 现代化文字游戏编辑器
 
 一款专注于**分支叙事**的文字游戏（互动小说 / 文字冒险 / 视觉小说）编辑器。基于节点画布组织剧情，内置试玩引擎，可一键导出为**单文件 HTML 可玩成品**，提供**自定义演出接口**（脚本节点 / 自定义 CSS·JS / 文本标记）与**双面插件系统**（编辑器 + 作品）。
 
@@ -21,7 +21,7 @@
 
 ## 下载
 
-Windows 安装包与便携版见 [Releases](https://github.com/FanerJian/storyloom/releases/latest)：下载 `StoryLoom-Setup-*.exe`（安装版）或 `StoryLoom-Portable-*.exe`（免安装单文件）。Tauri Lite 版暂需从源码构建。
+Windows 安装包与便携版见 [Releases](https://github.com/FanerJian/fableloom/releases/latest)：下载 `FableLoom-Setup-*.exe`（安装版）或 `FableLoom-Portable-*.exe`（免安装单文件）。Tauri Lite 版暂需从源码构建。
 
 各版本变更见 [CHANGELOG.md](CHANGELOG.md)。
 
@@ -96,16 +96,16 @@ api.goto('第三章')                 // 跳到指定名称的跳转点/结局
   "id": "my-skin", "name": "我的主题", "version": "1.0.0",
   "author": "", "description": "",
   "apiVersion": 1,
-  "editorCss": "/* 编辑器换肤 */", "editorJs": "/* 可用 window.StoryLoom */",
+  "editorCss": "/* 编辑器换肤 */", "editorJs": "/* 可用 window.FableLoom */",
   "runtimeCss": "/* 作品换肤 */", "runtimeJs": "/* 演出脚本，可用 api / vars / story */"
 }
 ```
 
-- **editorJs 上下文**（`window.StoryLoom`，apiVersion 1 内保证稳定）：`project.get()/getState()/subscribe(cb)`、`ui.openPlaytest()/openCustom()/openPlugins()`、`toast.*`、`version`
+- **editorJs 上下文**（`window.FableLoom`，apiVersion 1 内保证稳定）：`project.get()/getState()/subscribe(cb)`、`ui.openPlaytest()/openCustom()/openPlugins()`、`toast.*`、`version`
 - **runtimeJs** 与演出脚本节点同环境（`api.say/shake/…`），与工程 customJs 依次执行
 - 示例见 `examples/plugins/`（墨韵纸面主题：双端换肤；剧场宽幅模式：runtimeJs 动态样式）
 
-**兼容性设计**：`apiVersion` 不匹配的插件拒绝载入并明确报错；解析器对缺省字段全部兜底（旧插件向前兼容）；插件 API 面刻意收窄（editorJs 只承诺 `window.StoryLoom`，底层 store 结构不属于承诺范围）；插件注入失败只报错不停机。工程本身不依赖插件——卸载后试玩/导出立即回到原生形态。
+**兼容性设计**：`apiVersion` 不匹配的插件拒绝载入并明确报错；解析器对缺省字段全部兜底（旧插件向前兼容）；插件 API 面刻意收窄（editorJs 只承诺 `window.FableLoom`，底层 store 结构不属于承诺范围）；插件注入失败只报错不停机。工程本身不依赖插件——卸载后试玩/导出立即回到原生形态。
 
 ## 编辑器的上限（如实说）
 
@@ -120,7 +120,7 @@ api.goto('第三章')                 // 跳到指定名称的跳转点/结局
 | | Electron 版 | Tauri Lite 版 |
 |---|---|---|
 | 安装包 | ~98 MB | ~10 MB 量级 |
-| 获取 | [Releases](https://github.com/FanerJian/storyloom/releases) 提供 Setup / Portable 下载 | 从源码构建（`npm run build:tauri`，需 Rust stable-msvc） |
+| 获取 | [Releases](https://github.com/FanerJian/fableloom/releases) 提供 Setup / Portable 下载 | 从源码构建（`npm run build:tauri`，需 Rust stable-msvc） |
 | 说明 | 功能完全体 | 同一渲染层 + Rust 壳，文件对话框/读写走 Tauri 插件 |
 
 两个版本共用同一套 React 渲染层与可玩运行时，编辑器功能一致。

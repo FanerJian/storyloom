@@ -74,14 +74,14 @@ export function buildAppMenu(getWindow: () => BrowserWindow | null): Menu {
       label: '帮助',
       submenu: [
         {
-          label: '关于 StoryLoom',
+          label: '关于 FableLoom',
           click: () => {
             const win = getWindow()
             if (win) {
               dialog.showMessageBox(win, {
                 type: 'info',
                 title: '关于',
-                message: `StoryLoom v${app.getVersion()}`,
+                message: `FableLoom v${app.getVersion()}`,
                 detail: '现代化文字游戏编辑器 · 分支叙事 · 节点画布'
               })
             }

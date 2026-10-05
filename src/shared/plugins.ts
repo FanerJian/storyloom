@@ -1,5 +1,5 @@
 /**
- * StoryLoom 插件（.loomplugin，JSON）。
+ * FableLoom 插件（.loomplugin，JSON）。
  *
  * 一个插件 = 四段代码，按作用面拆分：
  * - editorCss / editorJs：注入编辑器（换肤、扩展编辑器行为）
@@ -8,7 +8,7 @@
  * 兼容性约定：
  * - apiVersion 必须等于 PLUGIN_API_VERSION 才能载入——主程序升级若改动
  *   插件接口，会同步抬高此值并保留旧版加载逻辑（加载失败只告警不停机）。
- * - editorJs 运行环境拿到 window.StoryLoom 上下文（见 renderer/pluginsContext.ts）；
+ * - editorJs 运行环境拿到 window.FableLoom 上下文（见 renderer/pluginsContext.ts）；
  *   runtimeJs 与演出脚本同环境（api / vars / story），可 await。
  * - 除 id/name/apiVersion 外所有字段可选，缺省按空串处理，未来新增字段
  *   一律可选，保证旧插件向前兼容。

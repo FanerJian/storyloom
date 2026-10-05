@@ -150,7 +150,7 @@ export function exportInk(project: StoryProject): { text: string; warnings: stri
   const entryChain = chains[0] ? (nameOf.get(chains[0].steps[0]) ?? null) : null
   const entry = entryChain ? [`-> ${entryChain}`] : []
 
-  const header = `// 由 StoryLoom 导出的 Ink 脚本（子集）。\n// 多媒体演出无法用 Ink 表达，导出为注释；Yarn 格式支持多媒体命令。\n\n`
+  const header = `// 由 FableLoom 导出的 Ink 脚本（子集）。\n// 多媒体演出无法用 Ink 表达，导出为注释；Yarn 格式支持多媒体命令。\n\n`
 
   return {
     text: header + [...varLines, ...entry, '', ...blocks].join('\n\n') + '\n',
@@ -281,7 +281,7 @@ export function parseInk(text: string, opts: { metaTitle?: string } = {}): Impor
       continue
     }
 
-    // StoryLoom 导出的结局标记：【完】结局名
+    // FableLoom 导出的结局标记：【完】结局名
     if ((m = line.match(/^【完】\s*(.*)$/))) {
       flushAll()
       segments().push({ kind: 'end', label: m[1].trim() })

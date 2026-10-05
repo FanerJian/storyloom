@@ -282,7 +282,7 @@ export function mountPlayer(container: HTMLElement, story: StoryProject, opts: P
       setStyle: (selector, cssText) => setStyle(selector, cssText),
       css: (cssText) => css(cssText),
       goto: (label) => {
-        if (!applyGoto(label)) console.warn(`[StoryLoom] api.goto：找不到名为「${label}」的跳转点/结局节点`)
+        if (!applyGoto(label)) console.warn(`[FableLoom] api.goto：找不到名为「${label}」的跳转点/结局节点`)
       }
     }
   }

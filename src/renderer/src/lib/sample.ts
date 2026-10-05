@@ -39,7 +39,7 @@ export function sampleProject(): StoryProject {
     version: 3,
     meta: {
       title: '翡翠旅店的夜晚',
-      author: 'StoryLoom',
+      author: 'FableLoom',
       description: '一个演示工程：暴雪夜的旅店里，你的每个选择都会被记住。'
     },
     assets: {},

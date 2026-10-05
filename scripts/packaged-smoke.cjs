@@ -17,9 +17,9 @@ async function main() {
   await new Promise(r => server.listen(0, '127.0.0.1', r))
   const port = server.address().port
   await new Promise(r => server.close(r))
-  const environment = { ...process.env, STORYLOOM_DATA_DIR: profile, STORYLOOM_TEST_HIDDEN: '1' }
-  if(beside)delete environment.STORYLOOM_DATA_DIR
-  delete environment.ELECTRON_RUN_AS_NODE; delete environment.STORYLOOM_E2E; delete environment.ELECTRON_RENDERER_URL
+  const environment = { ...process.env, FABLELOOM_DATA_DIR: profile, FABLELOOM_TEST_HIDDEN: '1' }
+  if(beside)delete environment.FABLELOOM_DATA_DIR
+  delete environment.ELECTRON_RUN_AS_NODE; delete environment.FABLELOOM_E2E; delete environment.ELECTRON_RENDERER_URL
   child = spawn(executable, [`--remote-debugging-port=${port}`, '--remote-debugging-address=127.0.0.1'], { env: environment, windowsHide: true, stdio: 'ignore' })
   child.on('error', e => { throw e })
   let target
@@ -37,13 +37,13 @@ async function main() {
   let ready=false
   for(let i=0;i<100;i++){const result=await evaluate('!!window.api && document.body.textContent.includes("新建空白工程")');if(result.result?.value){ready=true;break}await new Promise(r=>setTimeout(r,50))}
   assert(ready,'生产渲染层未能载入')
-  const result=await evaluate(`(async()=>{const app=await window.api.appInfo();const opened=await window.api.openProjectPath(${JSON.stringify(project)});return {app,canceled:opened.canceled,error:opened.error,version:opened.project?.version,nodes:opened.project?.nodes.length,scenes:opened.project?.authoring?.scenes.length,external:opened.project&&Object.values(opened.project.assets).every(a=>a.runtimeUrl?.startsWith('storyloom-asset:'))}})()`)
+  const result=await evaluate(`(async()=>{const app=await window.api.appInfo();const opened=await window.api.openProjectPath(${JSON.stringify(project)});return {app,canceled:opened.canceled,error:opened.error,version:opened.project?.version,nodes:opened.project?.nodes.length,scenes:opened.project?.authoring?.scenes.length,external:opened.project&&Object.values(opened.project.assets).every(a=>a.runtimeUrl?.startsWith('fableloom-asset:'))}})()`)
   assert(!result.exceptionDetails,JSON.stringify(result.exceptionDetails))
   const value=result.result.value
   assert.equal(value.app.version,require('../package.json').version);assert.equal(value.app.isDev,false)
   assert.equal(value.canceled,false);assert.equal(value.version,4);assert.equal(value.nodes,519);assert.equal(value.scenes,8);assert(value.external)
   assert(fs.existsSync(path.join(profile,'recent.json')),'用户数据未写入隔离的 D 盘目录')
-  await evaluate(`localStorage.setItem('storyloom.plugins.v1',JSON.stringify([{id:'smoke',name:'smoke',version:'1',apiVersion:1,editorJs:'window.__smoke=slp',editorCss:'',runtimeJs:'',runtimeCss:''}]));localStorage.setItem('storyloom.plugins.enabled.v1',JSON.stringify({smoke:true}));location.reload()`)
+  await evaluate(`localStorage.setItem('fableloom.plugins.v1',JSON.stringify([{id:'smoke',name:'smoke',version:'1',apiVersion:1,editorJs:'window.__smoke=slp',editorCss:'',runtimeJs:'',runtimeCss:''}]));localStorage.setItem('fableloom.plugins.enabled.v1',JSON.stringify({smoke:true}));location.reload()`)
   for(let i=0;i<100;i++){const r=await evaluate('!!window.__smoke && !!window.api');if(r.result?.value)break;await new Promise(r=>setTimeout(r,50))}
   const rendered = await evaluate(`window.api.openProjectPath(${JSON.stringify(project)}).then(r=>__smoke.project.getState().loadProject(r.project,r.path))`)
   assert(!rendered.exceptionDetails,JSON.stringify(rendered.exceptionDetails))

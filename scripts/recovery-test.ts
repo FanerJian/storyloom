@@ -14,7 +14,7 @@ import { clearProjectRecovery, deferRecovery, discardRecovery, initializeRecover
 import { projectActions, startProjectPersistence } from '../src/renderer/src/lib/projectActions'
 
 const testWork = resolve('work'); mkdirSync(testWork, { recursive: true })
-const testDirectory = mkdtempSync(join(testWork, 'storyloom-recovery-test-'))
+const testDirectory = mkdtempSync(join(testWork, 'fableloom-recovery-test-'))
 let passed = 0
 function check(label: string, body: () => void): void { body(); passed++; console.log(`  ok  ${label}`) }
 function deferred<T>() {
@@ -263,6 +263,6 @@ try {
   console.log(`恢复与保存测试：${passed} 项全部通过`)
 } finally {
   // 目标来自 mkdtemp，确保删除仅限本测试生成的目录。
-  assert(dirname(resolve(testDirectory)) === testWork && testDirectory.startsWith(join(testWork, 'storyloom-recovery-test-')))
+  assert(dirname(resolve(testDirectory)) === testWork && testDirectory.startsWith(join(testWork, 'fableloom-recovery-test-')))
   rmSync(testDirectory, { recursive: true, force: true })
 }

@@ -113,7 +113,7 @@ const html = `<!doctype html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PNG 透明验证 · StoryLoom</title>
+    <title>PNG 透明验证 · FableLoom</title>
     <style>html, body, #app { height: 100%; margin: 0 } body { background: #0b0d12; overflow-x: hidden }</style>
     <style>${runtimeCss}</style>
   </head>

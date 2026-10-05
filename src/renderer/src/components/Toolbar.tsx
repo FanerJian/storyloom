@@ -25,7 +25,7 @@ export function Toolbar() {
   const currentCreation = creationViews.find((v) => v.id === mode)
   const currentResource = resourceViews.find((v) => v.id === mode)
   return <header className="flex h-14 flex-none items-center gap-3 border-b border-[var(--border)] bg-[var(--surface)] px-4" data-testid="editor-toolbar">
-    <div className="flex h-7 w-7 flex-none items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 text-xs font-black text-white" title="StoryLoom">文</div>
+    <div className="flex h-7 w-7 flex-none items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 text-xs font-black text-white" title="FableLoom">文</div>
     <ActionMenu label="工程菜单" actions={[
       { label: '新建工程', icon: FilePlus2, shortcut: 'Ctrl+N', onSelect: () => projectActions.newProject() },
       { label: '打开工程', icon: FolderOpen, shortcut: 'Ctrl+O', onSelect: () => void projectActions.openProject() },
@@ -49,12 +49,12 @@ export function Toolbar() {
       <Button variant="ghost" size="icon" title="重做 (Ctrl+Shift+Z)" aria-label="重做" disabled={!canRedo} onClick={() => useProjectStore.getState().redo()}><Redo2 size={15} /></Button>
       <span className="mx-1 h-5 w-px bg-[var(--border)]" />
       <Button variant="ghost" size="icon" title="保存 (Ctrl+S)" aria-label="保存" onClick={() => void projectActions.save(false)}><Save size={15} /></Button>
-      <Button variant="soft" title="试玩 (F5)" onClick={() => window.dispatchEvent(new Event('storyloom:playtest'))}><Play size={14} className="fill-current" />试玩</Button>
+      <Button variant="soft" title="试玩 (F5)" onClick={() => window.dispatchEvent(new Event('fableloom:playtest'))}><Play size={14} className="fill-current" />试玩</Button>
       <Button variant="primary" title="导出可玩 HTML (Ctrl+E)" onClick={() => void projectActions.exportHtml()}><Download size={14} />导出</Button>
       <Button variant="ghost" size="icon" title="发布设置" aria-label="发布设置" onClick={() => useUiStore.getState().openRelease()}><Clapperboard size={15} /></Button>
       <ActionMenu label="工具" align="right" actions={[
         { label: '发布设置', icon: Clapperboard, separator: true, onSelect: () => useUiStore.getState().openRelease() },
-        { label: '自动整理布局', icon: LayoutTemplate, shortcut: 'Ctrl+Shift+L', disabled: mode !== 'nodes' && mode !== 'scenes', onSelect: () => window.dispatchEvent(new Event('storyloom:autolayout')) },
+        { label: '自动整理布局', icon: LayoutTemplate, shortcut: 'Ctrl+Shift+L', disabled: mode !== 'nodes' && mode !== 'scenes', onSelect: () => window.dispatchEvent(new Event('fableloom:autolayout')) },
         { label: '自定义接口', icon: Braces, separator: true, onSelect: () => useUiStore.getState().openCustom() },
         { label: '插件管理', icon: Plug, onSelect: () => useUiStore.getState().openPlugins() },
         { label: theme === 'dark' ? '切换浅色主题' : '切换深色主题', icon: theme === 'dark' ? Sun : Moon, separator: true, onSelect: () => useUiStore.getState().toggleTheme() }

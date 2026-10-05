@@ -1,10 +1,10 @@
 {
-  "name": "storyloom",
-  "productName": "StoryLoom",
+  "name": "fableloom",
+  "productName": "FableLoom",
   "version": "0.6.0",
   "description": "现代化文字游戏编辑器 · 分支叙事 · 节点画布 · 视觉小说播放器（标题画面/快进/音量/存档缩略图） · 发布配置 · 插件系统",
   "main": "out/main/index.js",
-  "author": "StoryLoom",
+  "author": "FableLoom",
   "license": "MIT",
   "scripts": {
     "dev": "npm run build:runtime && electron-vite dev",

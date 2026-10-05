@@ -1,8 +1,8 @@
 [package]
-name = "storyloom-lite"
+name = "fableloom-lite"
 version = "0.2.0"
-description = "StoryLoom 文字游戏编辑器（Tauri 瘦身版）"
-authors = ["StoryLoom"]
+description = "FableLoom 文字游戏编辑器（Tauri 瘦身版）"
+authors = ["FableLoom"]
 license = "MIT"
 edition = "2021"
 

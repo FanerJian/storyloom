@@ -1,5 +1,5 @@
 /**
- * StoryLoom 工程文件数据模型（.story.json）
+ * FableLoom 工程文件数据模型（.story.json）
  * 编辑器与可玩运行时共用此定义。
  *
  * version 2：新增视觉小说多媒体节点（bg / sprite / audio）与内嵌素材库 assets。

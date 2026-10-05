@@ -1,5 +1,5 @@
-appId: dev.storyloom.editor
-productName: StoryLoom
+appId: dev.fableloom.editor
+productName: FableLoom
 copyright: MIT © 2026
 
 directories:
@@ -22,7 +22,7 @@ nsis:
   perMachine: false
   allowToChangeInstallationDirectory: true
   artifactName: ${productName}-Setup-${version}.${ext}
-  shortcutName: StoryLoom
+  shortcutName: FableLoom
 
 portable:
   artifactName: ${productName}-Portable-${version}.${ext}

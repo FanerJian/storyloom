@@ -22,7 +22,7 @@ export default function App() {
 
   // 主题初始化
   useEffect(() => {
-    const saved = (localStorage.getItem('storyloom.theme') as 'dark' | 'light' | null) ?? 'dark'
+    const saved = (localStorage.getItem('fableloom.theme') as 'dark' | 'light' | null) ?? 'dark'
     setTheme(saved)
   }, [setTheme])
 
@@ -39,8 +39,8 @@ export default function App() {
       const nodeId = (e as CustomEvent<{ nodeId?: string }>).detail?.nodeId
       useUiStore.getState().openPlaytest(nodeId ?? null)
     }
-    window.addEventListener('storyloom:playtest', handler)
-    return () => window.removeEventListener('storyloom:playtest', handler)
+    window.addEventListener('fableloom:playtest', handler)
+    return () => window.removeEventListener('fableloom:playtest', handler)
   }, [])
 
   // 浏览器模式下的快捷键（Electron 下由原生菜单加速键接管）
@@ -51,7 +51,7 @@ export default function App() {
       if (!mod) {
         if (e.key === 'F5') {
           e.preventDefault()
-          window.dispatchEvent(new Event('storyloom:playtest'))
+          window.dispatchEvent(new Event('fableloom:playtest'))
         }
         return
       }
@@ -89,7 +89,7 @@ export default function App() {
         case 'l':
           if (e.shiftKey) {
             e.preventDefault()
-            window.dispatchEvent(new Event('storyloom:autolayout'))
+            window.dispatchEvent(new Event('fableloom:autolayout'))
           }
           break
       }
@@ -105,7 +105,7 @@ export default function App() {
   const title = useProjectStore((s) => s.meta.title)
   const dirty = useProjectStore((s) => s.dirty)
   useEffect(() => {
-    void hostApi.setWindowTitle(`${dirty ? '● ' : ''}${title} — StoryLoom`)
+    void hostApi.setWindowTitle(`${dirty ? '● ' : ''}${title} — FableLoom`)
   }, [title, dirty])
 
   if (!opened) {

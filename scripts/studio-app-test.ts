@@ -53,7 +53,7 @@ win = new BrowserWindow({ show: false, width: 1600, height: 1000, webPreferences
 registerIpc(() => win)
 win.webContents.on('console-message', (_e, level, message) => { if (level >= 3) errors.push(message) })
 try {
-  const source = process.env.STORYLOOM_TEAM_PROJECT
+  const source = process.env.FABLELOOM_TEAM_PROJECT
   const author = new DirectoryProjects()
   const input = source ? author.open(source) : sample()
   const target = join(directory, 'team/project.loomproject')
@@ -61,7 +61,7 @@ try {
   // 对话框返回测试目录，验证工具栏确实走正常保存接口。
   dialog.showOpenDialog = (async () => ({ canceled: false, filePaths: [join(directory, 'team')] })) as typeof dialog.showOpenDialog
   await win.loadFile(resolve('out/renderer/index.html'))
-  await page(`localStorage.setItem('storyloom.plugins.v1',JSON.stringify([{id:'test',name:'test',version:'1',apiVersion:1,editorJs:'window.testContext=slp',editorCss:'',runtimeJs:'',runtimeCss:''}]));localStorage.setItem('storyloom.plugins.enabled.v1',JSON.stringify({test:true}));location.reload()`)
+  await page(`localStorage.setItem('fableloom.plugins.v1',JSON.stringify([{id:'test',name:'test',version:'1',apiVersion:1,editorJs:'window.testContext=slp',editorCss:'',runtimeJs:'',runtimeCss:''}]));localStorage.setItem('fableloom.plugins.enabled.v1',JSON.stringify({test:true}));location.reload()`)
   await until('!!window.testContext && !!window.api', 'test context')
   await page(`window.api.openProjectPath(${JSON.stringify(target)}).then(r=>{if(r.error)throw Error(r.error); testContext.project.getState().loadProject(r.project,r.path)})`)
   await until(`!!document.querySelector('[data-testid="studio-workspace"]')`, 'studio loaded')
@@ -178,7 +178,7 @@ try {
     await until('!testContext.project.getState().dirty', 'directory saved')
     const saved = new DirectoryProjects().open(target)
     assert.equal(saved.nodes.find((n) => n.id === first.id)!.data.notes, '集成测试备注')
-    assert(Object.values(saved.assets).every((a) => !a.dataUrl && a.runtimeUrl?.startsWith('storyloom-asset:')))
+    assert(Object.values(saved.assets).every((a) => !a.dataUrl && a.runtimeUrl?.startsWith('fableloom-asset:')))
   })
   await check('受限本地协议实际加载全部图片和音频元数据', async () => {
     const results = await page(`Promise.all(Object.entries(testContext.project.get().assets).map(([id,a])=>new Promise(r=>{const e=a.type==='image'?new Image():new Audio();let done=false;const end=ok=>{if(done)return;done=true;r({id,ok})};e.onload=()=>end(true);e.onloadedmetadata=()=>end(true);e.onerror=()=>end(false);e.preload='metadata';e.src=a.runtimeUrl;setTimeout(()=>end(false),8000)})))`)

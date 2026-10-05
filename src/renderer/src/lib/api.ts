@@ -12,8 +12,23 @@ import { listBrowserRecovery, writeBrowserRecovery, clearBrowserRecovery } from 
  * 按运行环境自动选择，渲染层 UI 无感知。
  */
 
-const LS_KEY = 'storyloom.browser-projects'
-const LS_RECENT = 'storyloom.browser-recent'
+const LS_KEY = 'fableloom.browser-projects'
+const LS_RECENT = 'fableloom.browser-recent'
+// StoryLoom → FableLoom 改名前写入的键，读到后搬进新键
+const LS_KEY_LEGACY = 'storyloom.browser-projects'
+const LS_RECENT_LEGACY = 'storyloom.browser-recent'
+
+function migrateLsKey(key: string, legacy: string): void {
+  try {
+    if (localStorage.getItem(key) !== null || localStorage.getItem(legacy) === null) return
+    localStorage.setItem(key, localStorage.getItem(legacy) ?? '')
+    localStorage.removeItem(legacy)
+  } catch {
+    // localStorage 不可用（隐私模式等）时跳过迁移
+  }
+}
+migrateLsKey(LS_KEY, LS_KEY_LEGACY)
+migrateLsKey(LS_RECENT, LS_RECENT_LEGACY)
 
 interface BrowserRecord {
   name: string

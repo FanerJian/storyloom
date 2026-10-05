@@ -81,8 +81,8 @@ function SceneGraphView({ revision }: { revision: number }) {
   }, [graph, fitView])
   useEffect(() => {
     const handler = (): void => { void arrange() }
-    window.addEventListener('storyloom:autolayout', handler)
-    return () => window.removeEventListener('storyloom:autolayout', handler)
+    window.addEventListener('fableloom:autolayout', handler)
+    return () => window.removeEventListener('fableloom:autolayout', handler)
   }, [arrange])
   const exits = useMemo(() => {
     const occupied = new Map(storyEdges.map((e) => [JSON.stringify([e.source, e.sourceHandle ?? null]), e.target]))

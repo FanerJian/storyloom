@@ -331,10 +331,10 @@ export function dispatchMenuAction(action: string): void {
       useProjectStore.getState().redo()
       break
     case 'edit:layout':
-      window.dispatchEvent(new Event('storyloom:autolayout'))
+      window.dispatchEvent(new Event('fableloom:autolayout'))
       break
     case 'view:playtest':
-      window.dispatchEvent(new Event('storyloom:playtest'))
+      window.dispatchEvent(new Event('fableloom:playtest'))
       break
     case 'view:custom':
       useUiStore.getState().openCustom()

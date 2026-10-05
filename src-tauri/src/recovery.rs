@@ -93,7 +93,7 @@ mod tests {
 
     #[test]
     fn replace_preserves_complete_content_and_cleans_temporary_files() {
-        let dir = std::env::temp_dir().join(format!("storyloom-atomic-{}", std::process::id()));
+        let dir = std::env::temp_dir().join(format!("fableloom-atomic-{}", std::process::id()));
         fs::create_dir_all(&dir).unwrap();
         let path = dir.join("project.json");
         atomic_write(&path, "旧工程").unwrap();

@@ -24,7 +24,7 @@ export function composeExportHtml(story: StoryProject, plugins: RuntimePluginChu
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>${escapeHtml(title)} · StoryLoom</title>
+    <title>${escapeHtml(title)} · FableLoom</title>
     <style>html, body, #app { height: 100%; margin: 0 } body { background: #0b0d12; overflow-x: hidden }</style>
     <style>${runtimeCss}</style>
 ${pluginStyles}

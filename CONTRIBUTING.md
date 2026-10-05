@@ -1,6 +1,6 @@
 # 贡献指南
 
-感谢关注 StoryLoom。提 issue 或发 PR 前，建议先搜索现有 issue 是否已覆盖同一问题。
+感谢关注 FableLoom。提 issue 或发 PR 前，建议先搜索现有 issue 是否已覆盖同一问题。
 
 ## 报告问题 / 提建议
 

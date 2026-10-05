@@ -1,4 +1,4 @@
-// StoryLoom Lite：Tauri 2 壳。文件对话框与读写全部走
+// FableLoom Lite：Tauri 2 壳。文件对话框与读写全部走
 // tauri-plugin-dialog / tauri-plugin-fs，由渲染层的统一 HostApi 适配层调用。
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 

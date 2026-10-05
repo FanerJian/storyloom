@@ -52,7 +52,7 @@ export const useUiStore = create<UiState>((set, get) => ({
 
   setTheme: (t) => {
     document.documentElement.classList.toggle('dark', t === 'dark')
-    localStorage.setItem('storyloom.theme', t)
+    localStorage.setItem('fableloom.theme', t)
     set({ theme: t })
   },
   toggleTheme: () => get().setTheme(get().theme === 'dark' ? 'light' : 'dark'),

@@ -5,7 +5,7 @@ let database: Promise<IDBDatabase> | undefined
 
 function openDatabase(): Promise<IDBDatabase> {
   if (!database) database = new Promise((resolve, reject) => {
-    const request = indexedDB.open('storyloom-recovery', 1)
+    const request = indexedDB.open('fableloom-recovery', 1)
     request.onupgradeneeded = () => request.result.createObjectStore('snapshots', { keyPath: 'id' })
     request.onsuccess = () => resolve(request.result)
     request.onerror = () => { database = undefined; reject(request.error ?? new Error('浏览器恢复存储不可用')) }

@@ -1,4 +1,4 @@
-# StoryLoom 架构指南（v0.6）
+# FableLoom 架构指南（v0.6）
 
 面向接手维护与二次开发的开发者。读完这一篇，应该能回答：「改一个功能要动哪几个文件」。
 
@@ -12,7 +12,7 @@ src/preload     contextBridge，把受控的 IPC 面暴露为 window.api
 src/renderer    React 编辑器（zustand 单 store + React Flow 画布）
 src/runtime     可玩运行时（独立 vite 构建，?raw 内嵌进导出 HTML；试玩共用同一份）
 src/shared      数据模型 / 校验 / 存档协议 / io 转换 / 契约类型（三端共用）
-src-tauri       Tauri 2 壳（StoryLoom Lite，能力白名单 + recovery 插件）
+src-tauri       Tauri 2 壳（FableLoom Lite，能力白名单 + recovery 插件）
 ```
 
 | 层 | 关键文件（行数量级） | 职责 |
@@ -60,7 +60,7 @@ src-tauri       Tauri 2 壳（StoryLoom Lite，能力白名单 + recovery 插件
 ## 4. 素材系统
 
 - 单文件工程：`dataUrl` 直接内嵌（.story.json 单文件可移植）。
-- v4 团队工程：`dataUrl:''` + `path/contentHash` 指向 `assets/{sha256}{ext}`；运行时地址 `storyloom-asset://{rootToken}/{path}`（特权协议，`within()` 限词法+realpath 防逃逸）；导出/单文件保存前 `embedAssets` 读回 dataURL。
+- v4 团队工程：`dataUrl:''` + `path/contentHash` 指向 `assets/{sha256}{ext}`；运行时地址 `fableloom-asset://{rootToken}/{path}`（特权协议，`within()` 限词法+realpath 防逃逸）；导出/单文件保存前 `embedAssets` 读回 dataURL。
 - 寻址：节点用 asset key；演出脚本用素材**名**（`assetUrlByName` 宽松匹配省略扩展名，runtime/media.ts）。
 
 ## 5. Ink/Yarn 互转（shared/io/）
@@ -73,7 +73,7 @@ src-tauri       Tauri 2 壳（StoryLoom Lite，能力白名单 + recovery 插件
 
 ## 6. 插件系统（shared/plugins.ts）
 
-`.loomplugin` JSON，`parsePlugin` 校验 + apiVersion 门槛。四个作用面：editorCss/editorJs（PluginHost 注入）/ runtimeCss/runtimeJs（mountPlayer opts.plugins；导出经 `window.__PLUGINS__`）。editorJs 上下文 = `window.StoryLoom`（pluginsContext.ts，apiVersion 内承诺稳定）。
+`.loomplugin` JSON，`parsePlugin` 校验 + apiVersion 门槛。四个作用面：editorCss/editorJs（PluginHost 注入）/ runtimeCss/runtimeJs（mountPlayer opts.plugins；导出经 `window.__PLUGINS__`）。editorJs 上下文 = `window.FableLoom`（pluginsContext.ts，apiVersion 内承诺稳定）。
 
 ## 7. 三端 HostApi（lib/api.ts + shared/api.ts）
 
@@ -97,7 +97,7 @@ src-tauri       Tauri 2 壳（StoryLoom Lite，能力白名单 + recovery 插件
 - `test:player-dom` 真实 Electron 驱动播放器 DOM（17 checks，含标题画面）
 - `test:studio-app` / `test:app` 隐藏窗口驱动编辑器 UI（12 checks）
 - `test:browser-recovery` 浏览器回退链路
-- E2E 截图：`STORYLOOM_E2E=<png目录> npx electron .`（实现 `main/e2eHarness.ts`，可选 `STORYLOOM_E2E_EXPORT=<html>` 驱动导出成品）
+- E2E 截图：`FABLELOOM_E2E=<png目录> npx electron .`（实现 `main/e2eHarness.ts`，可选 `FABLELOOM_E2E_EXPORT=<html>` 驱动导出成品）
 
 **构建矩阵**：
 - `npm run build:runtime` → `resources/runtime/`（固定文件名，导出内联依赖它，**导出前必须先跑**）
@@ -107,7 +107,7 @@ src-tauri       Tauri 2 壳（StoryLoom Lite，能力白名单 + recovery 插件
 
 ## 9. 已知技术债与后续方向
 
-- 事件双轨：窗口/菜单走 IPC `menu:action`，编辑器内部走 window CustomEvent（`storyloom:playtest` 等）——可统一为事件总线。
+- 事件双轨：窗口/菜单走 IPC `menu:action`，编辑器内部走 window CustomEvent（`fableloom:playtest` 等）——可统一为事件总线。
 - `stores/project.ts` 的 commit/set 样板较重复（700 行），可抽通用 `patchNode` 工具。
 - 导出 HTML 单文件体积随素材线性膨胀；未来可做「素材外置目录 + 相对路径」导出形态。
 - runtime 播放器已模块化（screens/media/saves/scripting/typewriter），但 player.ts 仍是编排闭包；如再膨胀可抽 enter() 管线为独立 engine。

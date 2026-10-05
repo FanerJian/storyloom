@@ -2,7 +2,7 @@
   "id": "ink-paper-theme",
   "name": "墨韵纸面主题",
   "version": "1.0.0",
-  "author": "StoryLoom",
+  "author": "FableLoom",
   "description": "作品：暖纸色视觉小说皮肤；编辑器：强调色改为青墨。双端演示插件。",
   "apiVersion": 1,
   "editorCss": "/* 编辑器强调色 → 青墨 */\n:root {\n  --accent-soft: rgba(34, 211, 238, 0.12);\n}\n",

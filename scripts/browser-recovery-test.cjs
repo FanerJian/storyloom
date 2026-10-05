@@ -51,7 +51,7 @@ const click = (text) => page((label) => {
 /** Open a separate readonly connection so checks never modify production storage. */
 async function readSnapshots() {
   return page(() => new Promise((resolve, reject) => {
-    const request = indexedDB.open('storyloom-recovery', 1)
+    const request = indexedDB.open('fableloom-recovery', 1)
     request.onerror = () => reject(request.error)
     request.onsuccess = () => {
       const db = request.result
@@ -110,11 +110,11 @@ async function main() {
 
   // Install only in this isolated profile; the public plugin context supplies the actual store.
   await page(() => {
-    localStorage.setItem('storyloom.plugins.v1', JSON.stringify([{
+    localStorage.setItem('fableloom.plugins.v1', JSON.stringify([{
       id: 'browser-recovery-test', name: 'Browser recovery test', version: '1', apiVersion: 1,
       editorJs: 'window.__browserRecoveryTest = slp;', editorCss: '', runtimeJs: '', runtimeCss: ''
     }]))
-    localStorage.setItem('storyloom.plugins.enabled.v1', JSON.stringify({ 'browser-recovery-test': true }))
+    localStorage.setItem('fableloom.plugins.enabled.v1', JSON.stringify({ 'browser-recovery-test': true }))
   })
   await reload()
   await click('新建空白工程')

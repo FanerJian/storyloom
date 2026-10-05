@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "StoryLoom Lite",
+  "productName": "FableLoom Lite",
   "version": "0.5.0",
-  "identifier": "dev.storyloom.lite",
+  "identifier": "dev.fableloom.lite",
   "build": {
     "beforeBuildCommand": "npm run build:frontend:tauri",
     "beforeDevCommand": "npm run build:runtime && npm run dev:web",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "StoryLoom",
+        "title": "FableLoom",
         "width": 1440,
         "height": 900,
         "minWidth": 1080,

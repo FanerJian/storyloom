@@ -38,7 +38,7 @@ export function Welcome() {
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 text-2xl font-black text-white shadow-lg shadow-indigo-500/25">
             文
           </div>
-          <h1 className="text-2xl font-black tracking-wide">StoryLoom</h1>
+          <h1 className="text-2xl font-black tracking-wide">FableLoom</h1>
           <p className="mt-1.5 text-[13px] text-[var(--text-dim)]">长篇剧本 · 场景分支 · 团队工程</p>
         </div>
 

@@ -24,13 +24,13 @@ export function within(root: string, name: string): string {
 export function runtimeAsset(root: string, path: string): string {
   const token = digest(resolve(root)).slice(0, 24)
   directoryRoots.set(token, resolve(root))
-  return `storyloom-asset://${token}/${path.split('/').map(encodeURIComponent).join('/')}`
+  return `fableloom-asset://${token}/${path.split('/').map(encodeURIComponent).join('/')}`
 }
 
 function diskHash(path: string): string | null { return existsSync(path) ? digest(readFileSync(path)) : null }
 
 interface Manifest {
-  format: 'storyloom-directory'; version: 4; meta: StoryProject['meta']
+  format: 'fableloom-directory'; version: 4; meta: StoryProject['meta']
   authoring: Omit<AuthoringData, 'scenes' | 'characters'>
   scenes: { id: string; path: string }[]
   charactersFile: string
@@ -48,8 +48,8 @@ export class DirectoryProjects {
   private baselines = new Map<string, Map<string, string>>()
 
   private lock<T>(root: string, action: () => T): T {
-    mkdirSync(within(root, '.storyloom'), { recursive: true })
-    const path = within(root, '.storyloom/save.lock')
+    mkdirSync(within(root, '.fableloom'), { recursive: true })
+    const path = within(root, '.fableloom/save.lock')
     if (existsSync(path)) {
       const pid = Number(readFileSync(path, 'utf8'))
       let alive = true
@@ -64,7 +64,7 @@ export class DirectoryProjects {
 
   /** 保存中断时，只补写仍等于旧版本的文件；第三方新修改不会被覆盖。 */
   private recover(root: string): void {
-    const path = within(root, '.storyloom/pending.json')
+    const path = within(root, '.fableloom/pending.json')
     if (!existsSync(path)) return
     const entries = JSON.parse(readFileSync(path, 'utf8')) as JournalEntry[]
     if (!Array.isArray(entries) || entries.some((e) => typeof e.path !== 'string' || typeof e.content !== 'string' || e.after !== digest(e.content))) throw new Error('工程保存日志损坏，原文件已保留')
@@ -81,7 +81,7 @@ export class DirectoryProjects {
       const content = readFileSync(within(root, name), 'utf8'); files.set(name, digest(content)); return JSON.parse(content) as T
     }
     const manifest = read<Manifest>(basename(path))
-    if (manifest.format !== 'storyloom-directory' || manifest.version !== 4 || !manifest.authoring?.gameId || !Array.isArray(manifest.scenes)) throw new Error('不是有效的 v4 团队工程')
+    if (manifest.format !== 'fableloom-directory' || manifest.version !== 4 || !manifest.authoring?.gameId || !Array.isArray(manifest.scenes)) throw new Error('不是有效的 v4 团队工程')
     const chunks = manifest.scenes.map(({ id, path: file }) => {
       const chunk = read<SceneFile>(file)
       if (!safeId(id) || chunk.scene?.id !== id || !Array.isArray(chunk.nodes) || !Array.isArray(chunk.edges) || chunk.nodes.some((n) => n.sceneId !== id)) throw new Error(`场景文件结构无效：${file}`)
@@ -102,7 +102,7 @@ export class DirectoryProjects {
 
   open(path: string): StoryProject {
     const root = dirname(resolve(path))
-    if (existsSync(within(root, '.storyloom/pending.json'))) this.lock(root, () => this.recover(root))
+    if (existsSync(within(root, '.fableloom/pending.json'))) this.lock(root, () => this.recover(root))
     const { project, files } = this.read(path)
     this.baselines.set(resolve(path), files)
     return project
@@ -189,7 +189,7 @@ export class DirectoryProjects {
       for (const scene of authoring.scenes) writes.set(`scenes/${scene.id}.json`, json({ scene, nodes: nodesByScene.get(scene.id) ?? [], edges: edgesByScene.get(scene.id) ?? [] }))
       writes.set('characters.json', json(authoring.characters))
       const { scenes: _scenes, characters: _characters, ...globalAuthoring } = authoring
-      const manifest: Manifest = { format: 'storyloom-directory', version: 4, meta: p.meta, authoring: globalAuthoring,
+      const manifest: Manifest = { format: 'fableloom-directory', version: 4, meta: p.meta, authoring: globalAuthoring,
         scenes: authoring.scenes.map((s) => ({ id: s.id, path: `scenes/${s.id}.json` })), charactersFile: 'characters.json',
         assets, variables: p.variables, customCss: p.customCss, customJs: p.customJs }
       writes.set(basename(path), json(manifest)) // 清单最后提交
@@ -210,12 +210,12 @@ export class DirectoryProjects {
       }
       if (conflicts.length) throw new ProjectConflict(conflicts)
       if (entries.length) {
-        writeFileAtomic(within(root, '.storyloom/pending.json'), json(entries))
+        writeFileAtomic(within(root, '.fableloom/pending.json'), json(entries))
         this.recover(root)
       }
-      if (!existsSync(within(root, '.gitignore'))) writeFileAtomic(within(root, '.gitignore'), '.storyloom/\n*.tmp\n')
+      if (!existsSync(within(root, '.gitignore'))) writeFileAtomic(within(root, '.gitignore'), '.fableloom/\n*.tmp\n')
       if (!existsSync(within(root, '.gitattributes'))) writeFileAtomic(within(root, '.gitattributes'), '*.json text eol=lf\n*.loomproject text eol=lf\nassets/** filter=lfs diff=lfs merge=lfs -text\n')
-      if (!existsSync(within(root, '.storyloom/migration-report.json'))) writeFileAtomic(within(root, '.storyloom/migration-report.json'), json({ sourceVersion: input.version, gameId: authoring.gameId, preservedNodeIds: p.nodes.length, warnings: authoring.migrationWarnings }))
+      if (!existsSync(within(root, '.fableloom/migration-report.json'))) writeFileAtomic(within(root, '.fableloom/migration-report.json'), json({ sourceVersion: input.version, gameId: authoring.gameId, preservedNodeIds: p.nodes.length, warnings: authoring.migrationWarnings }))
       return { project: this.open(path), written: entries.map((e) => e.path), merged }
     })
   }

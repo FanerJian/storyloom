@@ -3,11 +3,11 @@ import { writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 /**
- * 开发用 E2E 钩子：STORYLOOM_E2E=<png输出目录> 时自动执行操作流并截图后退出。
- * （可选 STORYLOOM_E2E_EXPORT=<html> 会额外驱动导出的单文件成品。）
+ * 开发用 E2E 钩子：FABLELOOM_E2E=<png输出目录> 时自动执行操作流并截图后退出。
+ * （可选 FABLELOOM_E2E_EXPORT=<html> 会额外驱动导出的单文件成品。）
  *
  * 约定与踩坑（改动前必读）：
- * - 建议配 STORYLOOM_DATA_DIR=独立目录 运行：否则与正式实例共用 userData，
+ * - 建议配 FABLELOOM_DATA_DIR=独立目录 运行：否则与正式实例共用 userData，
  *   每轮都会堆积恢复快照（hydrate 变慢）并污染最近列表/插件库。
  * - 恢复快照弹窗会逐个排队弹出（pending[0]），必须循环点「稍后」清空。
  * - 所有弹窗的关闭钮共用 aria-label="关闭"：点 DOM 里最后一个（最上层）。
@@ -15,7 +15,7 @@ import { join } from 'node:path'
  * - 工具栏下拉菜单的菜单项（自定义接口/插件管理等）在展开前不在 DOM 里。
  */
 export async function runE2E(win: BrowserWindow): Promise<void> {
-  const e2eOut = process.env['STORYLOOM_E2E'] ?? ''
+  const e2eOut = process.env['FABLELOOM_E2E'] ?? ''
   const shot = async (name: string): Promise<void> => {
     const img = await win.webContents.capturePage()
     writeFileSync(join(e2eOut, name), img.toPNG())
@@ -78,12 +78,12 @@ export async function runE2E(win: BrowserWindow): Promise<void> {
   await shot('03-vn-inspector.png')
 
   // 自动布局
-  await click(`window.dispatchEvent(new Event('storyloom:autolayout'))`)
+  await click(`window.dispatchEvent(new Event('fableloom:autolayout'))`)
   await new Promise((r) => setTimeout(r, 1500))
   await shot('04-vn-layout.png')
 
   // 试玩：视觉小说演出（背景 + 立绘 + 对白贴底）——等播放器真实渲染出对白卡
-  await click(`window.dispatchEvent(new Event('storyloom:playtest'))`)
+  await click(`window.dispatchEvent(new Event('fableloom:playtest'))`)
   const cardVisible = await waitFor(`!!document.querySelector('.tgr-card')`, 15000)
   await new Promise((r) => setTimeout(r, 400))
   await shot('05-vn-playtest.png')
@@ -139,8 +139,8 @@ export async function runE2E(win: BrowserWindow): Promise<void> {
       editorCss: 'header { box-shadow: inset 0 -2px 0 #22d3ee; }',
       runtimeCss: '.tgr-vn .tgr-card { border-color: #22d3ee !important; border-width: 2px; }',
       editorJs: '', runtimeJs: '' }
-    localStorage.setItem('storyloom.plugins.v1', JSON.stringify([p]))
-    localStorage.setItem('storyloom.plugins.enabled.v1', JSON.stringify({ 'demo-skin': true }))
+    localStorage.setItem('fableloom.plugins.v1', JSON.stringify([p]))
+    localStorage.setItem('fableloom.plugins.enabled.v1', JSON.stringify({ 'demo-skin': true }))
     location.reload()
   })()`)
   // 刷新后：欢迎页重新水合（工程不会自动恢复），清空恢复弹窗后重新进入
@@ -151,7 +151,7 @@ export async function runE2E(win: BrowserWindow): Promise<void> {
   await shot('11-plugin-editor.png')
 
   // 试玩，验证作品面插件（对白卡青色描边）
-  await click(`window.dispatchEvent(new Event('storyloom:playtest'))`)
+  await click(`window.dispatchEvent(new Event('fableloom:playtest'))`)
   await waitFor(`!!document.querySelector('.tgr-card')`, 15000)
   await new Promise((r) => setTimeout(r, 400))
   await shot('12-plugin-playtest.png')
@@ -169,7 +169,7 @@ export async function runE2E(win: BrowserWindow): Promise<void> {
   await new Promise((r) => setTimeout(r, 300))
 
   // 导出的单文件 HTML 成品验证（export-demo 生成）
-  const exportedPath = process.env['STORYLOOM_E2E_EXPORT']
+  const exportedPath = process.env['FABLELOOM_E2E_EXPORT']
   if (exportedPath) {
     const win2 = new BrowserWindow({ show: false, width: 1280, height: 820 })
     await win2.loadFile(exportedPath)

@@ -27,7 +27,7 @@ export function PluginsModal() {
     try {
       const res = await hostApi.openTextFile(
         [
-          { name: 'StoryLoom 插件', extensions: [PLUGIN_FILE_EXT, 'json'] },
+          { name: 'FableLoom 插件', extensions: [PLUGIN_FILE_EXT, 'json'] },
           { name: 'JSON 文件', extensions: ['json'] }
         ],
         '安装插件'
@@ -122,7 +122,7 @@ export function PluginsModal() {
   "description": "",
   "apiVersion": ${PLUGIN_API_VERSION},
   "editorCss": "/* 编辑器换肤 */",
-  "editorJs":  "/* 可用 window.StoryLoom 上下文 */",
+  "editorJs":  "/* 可用 window.FableLoom 上下文 */",
   "runtimeCss": "/* 作品换肤（试玩+导出） */",
   "runtimeJs": "/* 演出脚本，可用 api / vars / story，可 await */"
 }`}</pre>

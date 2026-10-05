@@ -6,8 +6,23 @@ import { toast } from './toast'
  * 插件库：安装的插件与启用状态，localStorage 持久化（三端一致，
  * 无需主进程参与）。插件本体是纯文本 JSON，体积小，localStorage 足够。
  */
-const LS_PLUGINS = 'storyloom.plugins.v1'
-const LS_ENABLED = 'storyloom.plugins.enabled.v1'
+const LS_PLUGINS = 'fableloom.plugins.v1'
+const LS_ENABLED = 'fableloom.plugins.enabled.v1'
+// StoryLoom → FableLoom 改名前写入的键，读到后搬进新键
+const LS_PLUGINS_LEGACY = 'storyloom.plugins.v1'
+const LS_ENABLED_LEGACY = 'storyloom.plugins.enabled.v1'
+
+function migrateLsKey(key: string, legacy: string): void {
+  try {
+    if (localStorage.getItem(key) !== null || localStorage.getItem(legacy) === null) return
+    localStorage.setItem(key, localStorage.getItem(legacy) ?? '')
+    localStorage.removeItem(legacy)
+  } catch {
+    // localStorage 不可用（隐私模式等）时跳过迁移
+  }
+}
+migrateLsKey(LS_PLUGINS, LS_PLUGINS_LEGACY)
+migrateLsKey(LS_ENABLED, LS_ENABLED_LEGACY)
 
 interface PluginsState {
   plugins: LoomPlugin[]

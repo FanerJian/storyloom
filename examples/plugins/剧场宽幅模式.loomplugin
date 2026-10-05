@@ -2,7 +2,7 @@
   "id": "theater-wide",
   "name": "剧场宽幅模式",
   "version": "1.0.0",
-  "author": "StoryLoom",
+  "author": "FableLoom",
   "description": "作品：加宽对白卡、放大正文字号（runtimeJs 动态样式演示）。",
   "apiVersion": 1,
   "editorCss": "",

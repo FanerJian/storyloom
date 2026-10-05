@@ -100,7 +100,7 @@ check('保存事务中断可以补齐，第三方修改不会被事务恢复覆�
   const scenePath = `scenes/${p.authoring!.scenes[0].id}.json`, absolute = join(root, scenePath)
   const before = readFileSync(absolute, 'utf8'), next = before.replace('先保存者', '中断后补齐')
   const hash = (text: string): string => createHash('sha256').update(text).digest('hex')
-  const journal = join(root, '.storyloom/pending.json')
+  const journal = join(root, '.fableloom/pending.json')
   writeFileSync(journal, JSON.stringify([{ path: scenePath, before: hash(before), after: hash(next), content: next }]))
   assert.equal(new DirectoryProjects().open(target).nodes.find((n) => n.id === 'line1')!.data.text, '中断后补齐')
   assert(!existsSync(journal))
@@ -183,7 +183,7 @@ check('慢保存加外部合并时保留最新改稿，并阻止下次自动覆�
 
 // 资源为合法 WAV 头加稀疏静音区，仅测索引读写，不能当作真实配音/解码压力证明。
 const pressureRoot = join(root, 'pressure'); mkdirSync(join(pressureRoot, 'assets'), { recursive: true })
-const largePath = join(pressureRoot, 'assets/stress.wav'), logicalBytes = Number(process.env.STORYLOOM_STRESS_BYTES ?? 64 * 1024 * 1024)
+const largePath = join(pressureRoot, 'assets/stress.wav'), logicalBytes = Number(process.env.FABLELOOM_STRESS_BYTES ?? 64 * 1024 * 1024)
 const fd = openSync(largePath, 'w'), wav = Buffer.alloc(44)
 wav.write('RIFF'); wav.writeUInt32LE(logicalBytes - 8, 4); wav.write('WAVEfmt ', 8); wav.writeUInt32LE(16, 16)
 wav.writeUInt16LE(1, 20); wav.writeUInt16LE(1, 22); wav.writeUInt32LE(8000, 24); wav.writeUInt32LE(16000, 28)

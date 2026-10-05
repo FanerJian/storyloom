@@ -6,12 +6,12 @@ import { toast } from '../stores/toast'
 import { hostApi } from './api'
 
 /**
- * 编辑器插件的运行上下文：以 window.StoryLoom 暴露给 editorJs。
+ * 编辑器插件的运行上下文：以 window.FableLoom 暴露给 editorJs。
  * 这是插件兼容性的「稳定面」——apiVersion 内保证不破坏性变更；
  * 更底层的 store 结构不属于承诺范围。
  */
 
-export interface StoryLoomEditorContext {
+export interface FableLoomEditorContext {
   apiVersion: number
   version: string
   project: {
@@ -37,13 +37,13 @@ export interface StoryLoomEditorContext {
 
 declare global {
   interface Window {
-    StoryLoom?: StoryLoomEditorContext
+    FableLoom?: FableLoomEditorContext
   }
 }
 
-export function getPluginsContext(): StoryLoomEditorContext {
-  if (!window.StoryLoom) {
-    const ctx: StoryLoomEditorContext = {
+export function getPluginsContext(): FableLoomEditorContext {
+  if (!window.FableLoom) {
+    const ctx: FableLoomEditorContext = {
       apiVersion: PLUGIN_API_VERSION,
       version: '',
       project: {
@@ -63,10 +63,10 @@ export function getPluginsContext(): StoryLoomEditorContext {
         error: (m) => toast.error(m)
       }
     }
-    window.StoryLoom = ctx
+    window.FableLoom = ctx
     void hostApi.appInfo().then((info) => {
       ctx.version = info.version
     })
   }
-  return window.StoryLoom
+  return window.FableLoom
 }

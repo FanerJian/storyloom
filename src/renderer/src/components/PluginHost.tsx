@@ -6,7 +6,7 @@ import { getPluginsContext } from '../lib/pluginsContext'
 /**
  * 编辑器插件注入宿主：
  * - editorCss → <style id="loom-plugin-css-{id}">，随启停增删
- * - editorJs → 本次会话每个插件只执行一次，注入 window.StoryLoom 上下文；
+ * - editorJs → 本次会话每个插件只执行一次，注入 window.FableLoom 上下文；
  *   禁用/重新启用不重复执行（插件需自带清理逻辑，文档有说明）
  */
 const executed = new Set<string>()
